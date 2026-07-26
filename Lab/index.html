@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Cocky Monk — Lab</title>
+<link rel="stylesheet" href="vendor/fredoka.css">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/screens.css">
+<link rel="stylesheet" href="css/themes.css">
+</head>
+<body>
+<div id="app"></div>
+<!-- lottie-web (MIT, vendored) — classic script runs before deferred modules,
+     so window.lottie is ready when ui.js imports lottie.js. -->
+<script src="vendor/lottie.min.js"></script>
+<!-- PeerJS (MIT, vendored) — same reason: window.Peer must exist before net.js
+     dials. Loading it does nothing on its own; net.js only touches Peer when a
+     player actually hosts or joins, so an offline game never sees the network. -->
+<script src="vendor/peerjs.min.js"></script>
+<script type="module" src="js/ui.js"></script>
+</body>
+</html>

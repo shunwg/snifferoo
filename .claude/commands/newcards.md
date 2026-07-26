@@ -1,0 +1,1 @@
+Use the card-author skill. Add $ARGUMENTS new cards (default 25; accepts a language prefix like 'en 25', default nb) to the corresponding deck, then run node Tools/validate_deck.mjs --all and report deck sizes, difficulty mix, and any VERIFY notes.
