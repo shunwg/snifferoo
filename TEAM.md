@@ -82,14 +82,14 @@ Grener, pull requests og konflikthåndtering står i `README.md`.
 |---|---|
 | Spille lokalt | Dobbeltklikk `Play Snifferoo.cmd` (eller `dist/Snifferoo.html`) |
 | Se alle skjermene | `Open Screen Gallery.cmd` |
-| Spille med andre over nett | Åpne <https://shunwg.github.io/cockymonk/> og del rom-lenka |
+| Spille med andre over nett | Åpne <https://shunwg.github.io/snifferoo/> og del rom-lenka |
 | Utvikle med live-reload | `node Tools/serve-lab.mjs` → <http://localhost:8787/Lab/> |
 | Bygge én-fils-versjonen på nytt | `node Tools/build-standalone.mjs` (etter hver Lab-endring — `dist/` er sjekket inn) |
 | Kjøre ALT | `/qa` i Claude Code |
 
 ## Kom i gang som lagmedlem (engangs)
 
-1. Klon repoet: `git clone https://github.com/shunwg/cockymonk.git` — spillet ligger i `shunwg/`.
+1. Klon repoet: `git clone https://github.com/shunwg/snifferoo.git` — spillet ligger i rota.
 2. Installer [Node ≥ 18](https://nodejs.org) — **eneste** verktøykrav på Windows.
 3. Åpne Claude Code i repo-mappa — skills (`/director`, `/qa`, `/newcards`, kort-forfatteren, panelet) følger med repoet i `.claude/`.
 4. Kjør alle portene én gang så du vet hvordan grønt ser ut (`/qa`). Les så `Screens/SCREENS.md` (5 min) og ditt favorittsegments filer.

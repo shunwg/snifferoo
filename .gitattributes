@@ -1,5 +1,11 @@
 # Shell scripts must stay LF — they run on macOS (bash chokes on CRLF shebangs)
 *.sh text eol=lf
+# Same reason, one step removed: GitHub Actions writes each `run: |` block to a
+# file and executes it with bash on a Linux runner. Authored on Windows with CRLF,
+# every line of those blocks ends in \r and the runner fails on `$'\r': command
+# not found` — the deploy breaks in CI while looking fine in the editor.
+*.yml text eol=lf
+*.yaml text eol=lf
 # Windows batch launcher must be CRLF
 *.cmd text eol=crlf
 # Keep JSON/Swift/JS deterministic across the 3 machines
@@ -10,6 +16,11 @@
 *.css text eol=lf
 *.html text eol=lf
 *.md text eol=lf
+# SVG is base64-inlined into the bundle byte-for-byte by build-standalone.mjs, so
+# its line endings end up INSIDE dist/. Without this it checks out CRLF on Windows
+# (core.autocrlf=true), the favicon data URI gains one byte per line, and every
+# Windows rebuild shows a phantom dist/ diff against a bundle built where LF won.
+*.svg text eol=lf
 # Binary assets
 *.png binary
 *.ogg binary

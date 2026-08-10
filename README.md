@@ -2,7 +2,7 @@
 
 A game-master-led bluffing party game in Norwegian bokmål and English. One player draws an obscure
 word and its real meaning; everyone else invents a definition convincing enough to steal votes. The
-browser build is the live product; an iOS app is specced and scaffolded but not yet built.
+browser build is the live product; an iOS app is specced but not built (see `MAC_RUNBOOK.md`).
 
 Team map in bokmål: **[TEAM.md](TEAM.md)**. Segment matrix and interface contracts: **[LANES.md](LANES.md)**.
 
@@ -11,7 +11,7 @@ Team map in bokmål: **[TEAM.md](TEAM.md)**. Segment matrix and interface contra
 | | |
 |---|---|
 | **Locally, no install** | Double-click `Play Snifferoo.cmd`, or open `dist/Snifferoo.html` in any browser |
-| **Online** | https://shunwg.github.io/cockymonk/ — deployed from `main` by `.github/workflows/pages.yml` |
+| **Online** | https://shunwg.github.io/snifferoo/ — deployed from `main` by `.github/workflows/pages.yml` |
 
 The bundle is one self-contained file: game, decks, fonts, Lottie celebrations, all inlined. No Node,
 no server, works offline.
@@ -32,8 +32,8 @@ Node ≥ 18 is the only requirement on Windows.
 
 ## The gates
 
-Everything below must be green before a merge. This is the whole quality system — there is no CI
-that will catch it for you later.
+Everything below must be green before a merge. The deploy workflow runs the same battery on `main`,
+so a red gate blocks the live site — but it catches you *after* the merge, in public. Run them here.
 
 ```bash
 node --test Lab/js/engine.test.mjs Lab/js/fixtures.test.mjs Lab/js/fakepool.test.mjs Lab/js/online.test.mjs

@@ -6,7 +6,7 @@ conflict: PRD > DESIGN > this file. If something is unspecified, propose in plan
 silently.
 
 **What exists today:** the browser build in `Lab/` is the live product, deployed to
-https://shunwg.github.io/cockymonk/. **The iOS app is a spec, not a codebase** — the empty
+https://shunwg.github.io/snifferoo/. **The iOS app is a spec, not a codebase** — the empty
 `Sources/`, `Tests/`, `scripts/` and `project.yml` scaffolding was removed on 2026-07-28 because
 nothing had ever been built against it. The plan survives in PRD.md and `MAC_RUNBOOK.md`, and the
 files are one `git checkout` away in history.

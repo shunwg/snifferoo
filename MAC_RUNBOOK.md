@@ -8,7 +8,7 @@
 > **Nothing here is lost.** Restore the whole set with:
 >
 > ```bash
-> git checkout 0474804 -- shunwg/Sources shunwg/Tests shunwg/scripts shunwg/project.yml
+> git checkout 8a2ab89 -- Sources Tests scripts project.yml
 > ```
 >
 > `Tools/tokens-build.mjs` still contains `buildSwift()`, unreferenced — re-adding the
