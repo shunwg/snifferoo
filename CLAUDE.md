@@ -37,6 +37,14 @@ via an explicit PRD/DESIGN amendment. Rules authority for scoring/edge cases is
   WebRTC data channels + a public broker for signalling, used exclusively behind the transport seam
   in `Lab/js/net.js` — no `Peer` type anywhere else, and the broker never sees game content. Scoped
   by PRD §2.1 to the web build, so an iOS target gains no networking when one exists.
+- **Supabase auth (REST, no SDK)** (2026-08-15): reverses PRD §2's "zero backend by design", which
+  `TOOLBELT.md` had marked "revisit only at online-multiplayer v3" — online multiplayer shipped, and
+  Shun asked for required Google/Apple sign-in. Used exclusively behind the identity seam in
+  `Lab/js/auth.js`: no other file may build a provider endpoint or hold a credential, and there is a
+  test pinning that. **No package was added** — social sign-in is a redirect plus one GET, so the
+  four pure functions in `auth.js` are the whole protocol and the 120 KB SDK stays out of a bundle
+  whose promise is that it is one file you can double-click. The publishable anon key belongs in the
+  repo (RLS governs everything it touches); `service_role` never does.
 
 No other packages without asking.
 
@@ -47,6 +55,7 @@ No other packages without asking.
 | `Resources/deck_nb.json`, `deck_en.json` | **Only** the card-author skill writes here; always `node Tools/validate_deck.mjs --all` after |
 | `Resources/deck_*.sample.json` | Schema reference — never shipped, never edited |
 | `Lab/js/net.js` | The **only** file that may touch `Peer`, WebRTC, or the broker |
+| `Lab/js/auth.js` | The **only** file that may build a provider endpoint or hold a credential. Setup steps live in `AUTH-SETUP.md`; until `AUTH_CONFIG` is filled in, sign-in is inert and nothing is gated |
 | `Lab/js/clock.js` | Phase deadlines + the single `setInterval`. Every countdown constant lives here (bot pacing stays in `bots.js TUNING`) |
 | `Lab/js/rating.js` | Elo math + the one `localStorage` key. Pure; never imports DOM or net |
 | `Lab/` | The browser game. See `Lab/CLAUDE.md` |
@@ -87,12 +96,24 @@ green before merge.** Matrix and contracts in `LANES.md` (English); the human ma
 ## Guardrails
 - Never touch signing, provisioning, or `ExportOptions.plist` without explicit go-ahead.
 - Never delete or bulk-rewrite `deck_nb.json` — append/patch only.
-- Never add analytics, tracking, or network permissions. The iOS privacy label is "Data Not
-  Collected" and stays that way — PRD §2.1 scopes online play to the browser Lab precisely so this
-  stays true.
-- The web build stores a profile (name, rating, career nose) in `localStorage` and nowhere else. It
-  must always be erasable from the profile screen, and the About copy must describe it honestly —
-  never re-assert "we store nothing".
+- Never add analytics or tracking. Still absolute: nothing here measures a player for anyone's
+  benefit but their own. The iOS privacy label stays "Data Not Collected" because PRD §2.1 scopes
+  both online play and accounts to the browser Lab — an iOS target gains neither.
+- **AMENDED 2026-08-15 — the web build now has a backend.** It previously stored the profile in
+  `localStorage` and nowhere else. Shun asked for required Google/Apple sign-in on the online modes,
+  which cannot mean anything without somewhere to keep an identity, so Supabase auth is now an
+  approved exception (see below) and a signed-in player's name, picture and rating live on a server.
+  What did not change, and may not:
+  - **Én telefon and the offline bundle need no account and no network.** `authRequired()` in
+    `auth.js` covers the networked modes only. `dist/Snifferoo.html` must keep working from a
+    double-click on a plane. A login wall at app start breaks the README's own promise.
+  - **The game never reaches the backend.** Cards, lies and votes stay peer-to-peer. Supabase holds
+    an identity and a rating; it learns nothing about a round.
+  - **The profile stays erasable and the copy stays honest.** The About text names Supabase, in both
+    languages, and may never re-assert "we store nothing". If the backend's role grows, that copy
+    grows first.
+  - **Nothing is gated until `AUTH_CONFIG` is filled in** (`AUTH-SETUP.md`). Shipping a login screen
+    in front of a backend that cannot answer is the one failure with no recovery.
 - The name "Kokkelimonke" and any published game's card text must not appear anywhere in the repo.
   (This file and PRD §3 are the only permitted mentions — of the restriction itself.)
 

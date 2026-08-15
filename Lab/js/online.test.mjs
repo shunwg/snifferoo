@@ -16,6 +16,9 @@ import {
   RATING, ratingDeltas, ratingExpected, ratingApply, ratingFresh, ratingLoad,
   ratingSave, ratingReset, ratingNoseCap, ratingTier,
 } from "./rating.js";
+import {
+  authRequired, authConfigured, authAuthorizeUrl, authParseCallback, authProfileFromUser,
+} from "./auth.js";
 
 import {
   NET, NET_CONFIG, netProject, netLoopback, netRoomCode, netShareLink,
@@ -715,4 +718,102 @@ test("the friends door offers joining, not only hosting", async () => {
   assert.ok(screen, "there must be a FRIENDS screen behind that door");
   assert.match(screen, /netDoHost\(/, "…offering to create a room");
   assert.match(screen, /netDoJoin\(/, "…and to join one, on the same screen");
+});
+
+/* ---------- auth.js — the identity seam (added 2026-08-15) ----------
+
+   Only the pure half is testable without a provider: the URL we send people to,
+   the fragment they come back with, the name we make of whatever the provider
+   condescends to tell us, and the policy for which modes demand a session. That
+   is deliberately where the bugs live — the network half is one fetch. */
+
+test("auth policy: online modes need a session, one phone and offline do not", () => {
+  assert.equal(authRequired("friends"), true);
+  assert.equal(authRequired("open"), true);
+
+  // The load-bearing half. dist/Snifferoo.html is documented as working offline
+  // from a double-click, and hotseat is one phone going round a table with no
+  // second device to identify. A wall in front of either ships a game that
+  // cannot be opened on a plane, and a "required login" reading that breaks the
+  // launcher script is not the reading anybody wanted.
+  assert.equal(authRequired("hotseat"), false);
+  assert.equal(authRequired(undefined), false);
+});
+
+test("auth: nothing is demanded while no provider is configured", () => {
+  // Until AUTH-SETUP.md is done, URL and ANON_KEY are empty. Gating play on a
+  // backend that cannot answer is the one failure mode with no recovery.
+  assert.equal(authConfigured({ URL: "", ANON_KEY: "" }), false);
+  assert.equal(authConfigured({ URL: "https://x.supabase.co", ANON_KEY: "" }), false);
+  assert.equal(authConfigured({ URL: "https://x.supabase.co", ANON_KEY: "k" }), true);
+  assert.equal(authAuthorizeUrl("google", { cfg: { URL: "", ANON_KEY: "", PROVIDERS: ["google"] } }), null);
+});
+
+test("auth: the authorize url carries the WHOLE current page back", () => {
+  const cfg = { URL: "https://abc.supabase.co/", ANON_KEY: "k", PROVIDERS: ["google", "apple"] };
+  const u = new URL(authAuthorizeUrl("google", { cfg, redirect: "https://shunwg.github.io/snifferoo/?room=P3AZQJ" }));
+
+  assert.equal(u.origin + u.pathname, "https://abc.supabase.co/auth/v1/authorize", "trailing slash on URL must not double up");
+  assert.equal(u.searchParams.get("provider"), "google");
+
+  // The point of the whole parameter: a guest who followed a share link and was
+  // bounced through Google must land back IN THE ROOM, not on the home screen
+  // holding no code. Losing ?room= here turns an invitation into a dead end.
+  assert.equal(u.searchParams.get("redirect_to"), "https://shunwg.github.io/snifferoo/?room=P3AZQJ");
+
+  assert.equal(authAuthorizeUrl("facebook", { cfg }), null, "only configured providers");
+});
+
+test("auth: the callback fragment is read, and a plain load is not mistaken for one", () => {
+  assert.equal(authParseCallback(""), null);
+  assert.equal(authParseCallback("#fixture=07"), null, "the gallery's own hash is not a login");
+
+  const ok = authParseCallback("#access_token=abc.def.ghi&refresh_token=r1&expires_in=3600&token_type=bearer");
+  assert.equal(ok.token, "abc.def.ghi");
+  assert.equal(ok.refresh, "r1");
+  assert.equal(ok.expiresIn, 3600);
+
+  assert.match(authParseCallback("#error=access_denied&error_description=User%20cancelled").error, /cancelled/i);
+});
+
+test("auth: a display name is found however little the provider gives up", () => {
+  const g = authProfileFromUser({ id: "1", email: "ola@example.com",
+    user_metadata: { full_name: "Ola Nordmann", avatar_url: "https://x/a.png" },
+    app_metadata: { provider: "google" } });
+  assert.equal(g.name, "Ola Nordmann");
+  assert.equal(g.provider, "google");
+
+  // Apple returns the name ONCE, on the very first authorisation, and never
+  // again. Every subsequent sign-in arrives with metadata this bare, so the
+  // fallback chain is the normal path for Apple users rather than an edge case.
+  const a = authProfileFromUser({ id: "2", email: "kari@icloud.com", user_metadata: {}, app_metadata: { provider: "apple" } });
+  assert.equal(a.name, "kari", "email local-part beats a question mark in the roster");
+
+  const split = authProfileFromUser({ id: "3", user_metadata: { given_name: "Åse", family_name: "Berg" } });
+  assert.equal(split.name, "Åse Berg");
+
+  assert.equal(authProfileFromUser({ id: "4", user_metadata: {} }).name, "?");
+  assert.equal(authProfileFromUser(null), null);
+
+  // The roster chip and every name input in the game cap at 14.
+  const long = authProfileFromUser({ id: "5", user_metadata: { full_name: "Bartholomew Fitzgerald-Smythe" } });
+  assert.equal(long.name.length, 14);
+});
+
+test("auth: the seam is the only door to the provider", async () => {
+  // Same rule net.js holds for Peer. A fetch to supabase from ui.js would work
+  // fine and quietly destroy the seam, so it is pinned rather than trusted.
+  // NOT a grep for the word "supabase": state.js is REQUIRED to name it, in both
+  // languages, because the privacy copy has to say who holds your profile now.
+  // The invariant is about endpoints and credentials, not about the brand being
+  // unmentionable — and writing it the loose way failed on the honest copy,
+  // which is the wrong thing for a test to punish.
+  for (const f of ["ui.js", "net.js", "rating.js", "state.js"]) {
+    const raw = await readFile(new URL(`./${f}`, import.meta.url), "utf8");
+    const code = raw.replace(/\/\*[\s\S]*?\*\//g, " ")
+      .split("\n").map((l) => l.replace(/\/\/.*$/, "")).join("\n");
+    assert.ok(!/auth\/v1\//.test(code), `${f} must not build provider endpoints itself`);
+    assert.ok(!/supabase\.co/i.test(code), `${f} must not hardcode a provider host`);
+    assert.ok(!/ANON_KEY\s*[:=]/.test(code), `${f} must not carry provider credentials`);
+  }
 });

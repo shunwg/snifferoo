@@ -27,7 +27,7 @@ Philosophy: **5–6 active MCPs max.** Every MCP tool definition eats context; a
 | Tool | Why not |
 |---|---|
 | Unity / Godot MCPs | Wrong tool — this is a SwiftUI app, not an engine game |
-| Firebase / Supabase plugins | v1 has zero backend by design (PRD §2). Revisit only at online-multiplayer v3 |
+| ~~Firebase / Supabase plugins~~ | **Superseded 2026-08-15.** This row said "revisit only at online-multiplayer v3" — that condition was met, and Shun asked for required Google/Apple sign-in. Supabase auth is now an approved exception in CLAUDE.md, reached only through `Lab/js/auth.js` over REST. Firebase stays out. Note the row was about MCP *plugins*: no npm package was added either way, since sign-in is a redirect and one GET |
 | Playwright / Chrome DevTools | The Lab is browser-based, but Claude's built-in Browser pane covers it — no extra web MCPs |
 | Any analytics SDK MCP | Privacy label is "Data Not Collected" (CLAUDE.md guardrail) |
 

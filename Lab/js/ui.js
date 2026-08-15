@@ -22,6 +22,9 @@ import {
   ratingNoseCap, ratingTier,
 } from "./rating.js";
 import {
+  AUTH, AUTH_CONFIG, authRequired, authConfigured, authBoot, authSignIn, authSignOut, authLoopback,
+} from "./auth.js";
+import {
   NET, NET_CONFIG, netLoopback, netHost, netJoin, netOpen, netReclaimDelay, netProject, netShareLink,
   netRoomFromUrl, netTally, netVotesIn, netBroadcastState, netBroadcastLobby, netJoinOpen,
   netSeatKind, netStartScore,
@@ -695,6 +698,11 @@ SCREENS.MODE = () => {
     // friends tapping the same button each became the host of their own empty
     // room and sat waiting for each other forever. FRIENDS asks which end of the
     // code you are holding. See the invariant in online.test.mjs.
+    // Identity is demanded for the networked modes and nowhere else — the rule
+    // lives in auth.js authRequired(), tested there, so this reads as policy
+    // rather than reimplementing it. authGate() is a no-op until Shun completes
+    // AUTH-SETUP.md; an unconfigured provider must never block play.
+    if (authGate(b.dataset.mode)) return;
     if (b.dataset.mode === "friends") { U.joinError = null; U.screen = "FRIENDS"; render(); return; }
     if (b.dataset.mode === "open") { netDoOpen(); return; }     // the one shared room
     U.mode = b.dataset.mode; U.screen = "PLAYERS"; render();
@@ -2042,6 +2050,48 @@ SCREENS.LOBBY_WAIT = () => {
    </div>`);
 };
 
+/* The gate. Returns true when it has taken the screen over, so every caller
+   reads as `if (authGate(mode)) return;`.
+
+   THREE conditions, and the middle one is the load-bearing one. A player is only
+   stopped when the mode is networked, a provider is actually configured, AND
+   there is no session. Until AUTH-SETUP.md is finished AUTH_CONFIG is empty and
+   this is a no-op, so the game ships and plays exactly as it does today instead
+   of putting up a login screen that cannot possibly succeed. An auth wall in
+   front of an unconfigured backend is the one failure with no way out of it. */
+function authGate(mode) {
+  if (!authRequired(mode) || !authConfigured() || AUTH.status === "signed-in") return false;
+  U.screen = "SIGNIN"; render();
+  return true;
+}
+
+SCREENS.SIGNIN = () => {
+  const busy = AUTH.status === "pending";
+  const has = (p) => AUTH_CONFIG.PROVIDERS.includes(p);
+  shell(`
+   <h2>${t("signinTitle")}</h2>
+   <p class="small" style="margin:-2px 0 14px">${t("signinSub")}</p>
+   ${AUTH.error ? `<div class="banner" style="background:var(--color-timer-urgent)">${t(AUTH.error)}</div>` : ""}
+   ${has("google") ? `<button class="btn" id="sigoogle" ${busy ? "disabled" : ""}>${t("signinGoogle")}</button>` : ""}
+   ${has("apple") ? `<button class="btn secondary" id="siapple" ${busy ? "disabled" : ""}>${t("signinApple")}</button>` : ""}
+   ${busy ? `<p class="small" style="text-align:center">${t("signinPending")}</p>` : ""}
+   <div style="flex:1"></div>
+   <p class="small" style="text-align:center;margin:0 0 8px">${t("signinPrivacy")}</p>
+   <button class="linkbtn" id="sihotseat">${t("signinHotseat")}</button>`);
+
+  const g = document.getElementById("sigoogle");
+  if (g) g.onclick = () => { play("confirm"); authSignIn("google"); render(); };
+  const a = document.getElementById("siapple");
+  if (a) a.onclick = () => { play("confirm"); authSignIn("apple"); render(); };
+
+  // Always an exit, the same principle as joinPlayBots on a failed join: there
+  // is a whole game here that needs no account and no network, and a sign-in
+  // screen must never be a dead end for someone who just wants to play.
+  document.getElementById("sihotseat").onclick = () => {
+    U.mode = "hotseat"; U.screen = "PLAYERS"; play("back"); render();
+  };
+};
+
 /* The front door for "Spill med venner" — one screen, both ends of the code.
 
    It exists because the menu used to host outright. Two friends tapping the same
@@ -2397,6 +2447,23 @@ document.addEventListener("visibilitychange", () => {
 });
 
 netLoopback();          // local play is its own host; online replaces this transport
+authLoopback();         // …and identity starts absent, the same way
+
+/* Adopt a sign-in callback or a stored session, without ever blocking first
+   paint. authBoot() is async and deliberately un-awaited: the game must render
+   and be playable while the provider is being asked, because a slow or dead
+   backend has no business delaying a menu whose first entry needs no account.
+   It is a no-op the moment AUTH_CONFIG is empty. */
+if (!bootFx && authConfigured()) {
+  authBoot({
+    onChange: () => {
+      // The signed-in name is a better default than a blank field, but never
+      // overwrites something the player typed themselves.
+      if (AUTH.user?.name && !U.uname) U.uname = AUTH.user.name;
+      render();
+    },
+  });
+}
 
 // A shared link drops you straight at the join screen with the code filled in.
 // This is the whole point of "send a link to your friends": no menu to navigate.

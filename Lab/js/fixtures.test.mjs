@@ -15,7 +15,7 @@ const SCREEN_IDS = [
   // screen into the middle renumbers every fixture after it — and screen numbers
   // are the permanent handles the whole team points at. SCREENS.md states the
   // same rule for the same reason.
-  "FRIENDS",
+  "FRIENDS", "SIGNIN",
 ];
 const SCREEN_COUNT = SCREEN_IDS.length;   // numbers are permanent; new screens append
 // Keys of the G literal in ui.js startGame() — fxMakeG must mirror it.

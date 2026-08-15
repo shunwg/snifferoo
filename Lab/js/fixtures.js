@@ -254,6 +254,12 @@ export const FIXTURES = [
   // disabled buttons and reviewing that tells you nothing.
   { id: "24", screen: "FRIENDS", name: "Spill med venner",
     make: () => ({ u: { uname: "Ingrid", joinCode: "" }, g: null }) },
+
+  // Renders from AUTH_CONFIG.PROVIDERS, so both buttons are posed here even
+  // though the gate itself stays inert until AUTH-SETUP.md is done. Reviewing a
+  // screen nobody can currently reach is exactly what the gallery is for.
+  { id: "25", screen: "SIGNIN", name: "Logg inn",
+    make: () => ({ u: {}, g: null }) },
 ];
 
 // A posed lobby roster. Åse hosts; the last seat is deliberately disconnected so

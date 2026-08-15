@@ -60,7 +60,9 @@ export const STR = {
     aboutCredits: "Skrifter og lyder: Fredoka (OFL), lottie-web (MIT), Kenney (CC0).",
     // Honest, not reassuring: the moment a profile is persisted, "vi lagrer
     // ingenting" is an over-claim. PRD §10 / ONLINE-PLAY.md «den ærlige linja».
-    aboutPrivacy: "Ingen server ser spillet ditt. Profilen din (navn, rating og nesetelling) ligger bare i denne nettleseren, og du kan slette den når du vil.",
+    // Oppdatert 2026-08-15: med innlogging er «bare i denne nettleseren» ikke
+    // lenger sant for de som logger inn, og da skal det ikke stå der heller.
+    aboutPrivacy: "Ingen server ser selve spillet. Kort, løgner og stemmer går rett mellom telefonene. Spiller du på én telefon, ligger profilen din (navn, rating og nesetelling) bare i denne nettleseren. Logger du inn med Google eller Apple, lagrer vi navn, bilde og rating hos Supabase. Du kan slette alt når du vil.",
     homeProfile: "Profilen din",
     profileTitle: "Profilen din", profileGames: "Spill", profileWins: "Seire",
     profileNose: "Neser samlet", profileLast: "Siste spill",
@@ -70,6 +72,18 @@ export const STR = {
     ratingDelta: (n) => `${n >= 0 ? "+" : ""}${n} rating`,
     // Nett-rom (PRD §2.1)
     modeFriends: "Spill med venner", modeFriendsSub: "Del en kode. Alle spiller fra sin egen telefon.",
+    signinTitle: "Logg inn",
+    signinSub: "Spill med andre krever konto, så ratingen din følger deg fra telefon til telefon.",
+    signinGoogle: "Fortsett med Google",
+    signinApple: "Fortsett med Apple",
+    signinPending: "Sender deg videre…",
+    signinHotseat: "Spill på én telefon i stedet",
+    // Honest, per PRD §10: the moment a backend holds a profile, "ingen server
+    // ser spillet ditt" stops being true and must stop being said.
+    signinPrivacy: "Vi lagrer navn, bilde og rating hos Supabase. Selve spillet går fortsatt direkte mellom telefonene.",
+    signoutGo: "Logg ut",
+    authExpired: "Innloggingen gikk ut. Logg inn på nytt.",
+    authUnavailable: "Innlogging er ikke satt opp ennå.",
     friendsTitle: "Spill med venner",
     friendsHostTitle: "Lag et rom",
     friendsHostSub: "Du velger lengde, brett og frister. De andre får en kode av deg.",
@@ -179,7 +193,7 @@ export const STR = {
     aboutBlurb: "A party game about lying with style. You make the fun yourselves. The app just keeps score.",
     aboutCredits: "Fonts and audio: Fredoka (OFL), lottie-web (MIT), Kenney (CC0).",
     // Honest, not reassuring — see the nb note above.
-    aboutPrivacy: "No server sees your game. Your profile (name, rating and nose count) lives only in this browser, and you can delete it whenever you like.",
+    aboutPrivacy: "No server sees the game itself. Cards, lies and votes go straight between the phones. If you play on one phone, your profile (name, rating and nose count) lives only in this browser. If you sign in with Google or Apple, we store your name, picture and rating with Supabase. You can delete all of it whenever you like.",
     homeProfile: "Your profile",
     profileTitle: "Your profile", profileGames: "Games", profileWins: "Wins",
     profileNose: "Noses collected", profileLast: "Recent games",
@@ -189,6 +203,16 @@ export const STR = {
     ratingDelta: (n) => `${n >= 0 ? "+" : ""}${n} rating`,
     // Online rooms (PRD §2.1)
     modeFriends: "Play with friends", modeFriendsSub: "Share a code. Everyone plays from their own phone.",
+    signinTitle: "Sign in",
+    signinSub: "Playing with other people needs an account, so your rating follows you from phone to phone.",
+    signinGoogle: "Continue with Google",
+    signinApple: "Continue with Apple",
+    signinPending: "Taking you there…",
+    signinHotseat: "Play on one phone instead",
+    signinPrivacy: "We store your name, picture and rating with Supabase. The game itself still runs directly between the phones.",
+    signoutGo: "Sign out",
+    authExpired: "Your sign-in expired. Sign in again.",
+    authUnavailable: "Sign-in isn't set up yet.",
     friendsTitle: "Play with friends",
     friendsHostTitle: "Start a room",
     friendsHostSub: "You pick length, board and deadlines. The others get a code from you.",

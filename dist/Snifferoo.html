@@ -1271,7 +1271,9 @@ const STR = {
     aboutCredits: "Skrifter og lyder: Fredoka (OFL), lottie-web (MIT), Kenney (CC0).",
     // Honest, not reassuring: the moment a profile is persisted, "vi lagrer
     // ingenting" is an over-claim. PRD §10 / ONLINE-PLAY.md «den ærlige linja».
-    aboutPrivacy: "Ingen server ser spillet ditt. Profilen din (navn, rating og nesetelling) ligger bare i denne nettleseren, og du kan slette den når du vil.",
+    // Oppdatert 2026-08-15: med innlogging er «bare i denne nettleseren» ikke
+    // lenger sant for de som logger inn, og da skal det ikke stå der heller.
+    aboutPrivacy: "Ingen server ser selve spillet. Kort, løgner og stemmer går rett mellom telefonene. Spiller du på én telefon, ligger profilen din (navn, rating og nesetelling) bare i denne nettleseren. Logger du inn med Google eller Apple, lagrer vi navn, bilde og rating hos Supabase. Du kan slette alt når du vil.",
     homeProfile: "Profilen din",
     profileTitle: "Profilen din", profileGames: "Spill", profileWins: "Seire",
     profileNose: "Neser samlet", profileLast: "Siste spill",
@@ -1281,6 +1283,18 @@ const STR = {
     ratingDelta: (n) => `${n >= 0 ? "+" : ""}${n} rating`,
     // Nett-rom (PRD §2.1)
     modeFriends: "Spill med venner", modeFriendsSub: "Del en kode. Alle spiller fra sin egen telefon.",
+    signinTitle: "Logg inn",
+    signinSub: "Spill med andre krever konto, så ratingen din følger deg fra telefon til telefon.",
+    signinGoogle: "Fortsett med Google",
+    signinApple: "Fortsett med Apple",
+    signinPending: "Sender deg videre…",
+    signinHotseat: "Spill på én telefon i stedet",
+    // Honest, per PRD §10: the moment a backend holds a profile, "ingen server
+    // ser spillet ditt" stops being true and must stop being said.
+    signinPrivacy: "Vi lagrer navn, bilde og rating hos Supabase. Selve spillet går fortsatt direkte mellom telefonene.",
+    signoutGo: "Logg ut",
+    authExpired: "Innloggingen gikk ut. Logg inn på nytt.",
+    authUnavailable: "Innlogging er ikke satt opp ennå.",
     friendsTitle: "Spill med venner",
     friendsHostTitle: "Lag et rom",
     friendsHostSub: "Du velger lengde, brett og frister. De andre får en kode av deg.",
@@ -1390,7 +1404,7 @@ const STR = {
     aboutBlurb: "A party game about lying with style. You make the fun yourselves. The app just keeps score.",
     aboutCredits: "Fonts and audio: Fredoka (OFL), lottie-web (MIT), Kenney (CC0).",
     // Honest, not reassuring — see the nb note above.
-    aboutPrivacy: "No server sees your game. Your profile (name, rating and nose count) lives only in this browser, and you can delete it whenever you like.",
+    aboutPrivacy: "No server sees the game itself. Cards, lies and votes go straight between the phones. If you play on one phone, your profile (name, rating and nose count) lives only in this browser. If you sign in with Google or Apple, we store your name, picture and rating with Supabase. You can delete all of it whenever you like.",
     homeProfile: "Your profile",
     profileTitle: "Your profile", profileGames: "Games", profileWins: "Wins",
     profileNose: "Noses collected", profileLast: "Recent games",
@@ -1400,6 +1414,16 @@ const STR = {
     ratingDelta: (n) => `${n >= 0 ? "+" : ""}${n} rating`,
     // Online rooms (PRD §2.1)
     modeFriends: "Play with friends", modeFriendsSub: "Share a code. Everyone plays from their own phone.",
+    signinTitle: "Sign in",
+    signinSub: "Playing with other people needs an account, so your rating follows you from phone to phone.",
+    signinGoogle: "Continue with Google",
+    signinApple: "Continue with Apple",
+    signinPending: "Taking you there…",
+    signinHotseat: "Play on one phone instead",
+    signinPrivacy: "We store your name, picture and rating with Supabase. The game itself still runs directly between the phones.",
+    signoutGo: "Sign out",
+    authExpired: "Your sign-in expired. Sign in again.",
+    authUnavailable: "Sign-in isn't set up yet.",
     friendsTitle: "Play with friends",
     friendsHostTitle: "Start a room",
     friendsHostSub: "You pick length, board and deadlines. The others get a code from you.",
@@ -2256,6 +2280,254 @@ function ratingReset(name = "") {
   const fresh = ratingFresh(name);
   ratingSave(fresh);
   return fresh;
+}
+
+
+/* ===== auth.js ===== */
+// auth.js — the identity seam. Segment 5 (nett), alongside net.js.
+//
+// THE ONLY FILE that may talk to the auth provider, exactly the rule net.js
+// holds for `Peer`. Everything else reads AUTH and calls the four verbs below,
+// and cannot tell whether a real provider or the loopback is behind them.
+//
+// NO SDK. Supabase auth is a plain REST API and social sign-in is a redirect:
+// we send the browser to /auth/v1/authorize?provider=google, the provider and
+// Supabase do the dance, and the browser comes back with tokens in the URL
+// fragment. Vendoring @supabase/supabase-js to accomplish a redirect and one
+// GET would add ~120 KB to a bundle whose whole promise is that it is one file
+// you can double-click. The four pure functions below are the entire protocol.
+//
+// WHY THIS EXISTS AT ALL, since it reverses a documented decision: PRD §2 said
+// zero backend, and TOOLBELT.md listed Supabase under "deliberately NOT
+// invited — revisit only at online-multiplayer v3". Online multiplayer shipped,
+// Shun asked for real accounts on 2026-08-15, and the amendment is recorded in
+// CLAUDE.md rather than left implicit here.
+//
+// BUNDLE NOTE: one IIFE with every other module, so internals are prefixed `au`.
+
+const AUTH = {
+  kind: "loopback",       // "loopback" | "supabase"
+  status: "signed-out",   // "signed-out" | "pending" | "signed-in" | "unconfigured"
+  user: null,             // {id, name, email, avatar, provider}
+  error: null,            // last human-readable failure, for the sign-in screen
+};
+
+// Filled in from the Supabase dashboard — see AUTH-SETUP.md. The anon key is
+// PUBLISHABLE and belongs in the repo: it identifies the project, authorises
+// nothing on its own, and every table it can reach is governed by row-level
+// security. Ordkrig commits the same class of key for the same reason. The
+// service_role key is the opposite of this and must never appear here.
+const AUTH_CONFIG = Object.freeze({
+  URL: "",                // e.g. https://abcdefgh.supabase.co
+  ANON_KEY: "",
+  PROVIDERS: ["google", "apple"],
+  STORE_KEY: "snifferoo.session.v1",
+});
+
+/* Is a real provider wired up? Until Shun completes AUTH-SETUP.md this is false
+   everywhere, and the app must stay fully playable rather than showing a sign-in
+   screen that cannot succeed. A login wall in front of an unconfigured backend
+   is how you ship a game nobody can open. */
+const authConfigured = (cfg = AUTH_CONFIG) =>
+  Boolean(cfg.URL && cfg.ANON_KEY);
+
+/**
+ * Which modes need a signed-in player? Policy, so it is pure and testable
+ * without a browser or a provider.
+ *
+ * ONLINE ONLY, and that is a deliberate reading of "required login". A login
+ * wall at app start would brick two things the project promises in writing:
+ * dist/Snifferoo.html, which is documented as "no Node, no server, works
+ * offline" and is what `Play Snifferoo.cmd` opens, and "Én telefon", which is
+ * one phone passed around a table where there is no second device to identify
+ * and frequently no network at all.
+ *
+ * Identity is worth requiring exactly where identity means something: a room
+ * with other people in it, where a rating is at stake and a name is how the
+ * table knows who lied to them.
+ */
+function authRequired(mode) {
+  return mode === "friends" || mode === "open";
+}
+
+/**
+ * Where to send the browser to sign in.
+ *
+ * `redirect` carries the CURRENT url, not a bare origin, so a guest who opened
+ * a share link (?room=P3AZQJ) is returned to that room rather than dumped on the
+ * home screen having lost the code they were invited with. That is the single
+ * most likely way for this flow to be experienced, so it is the default.
+ */
+function authAuthorizeUrl(provider, { cfg = AUTH_CONFIG, redirect } = {}) {
+  if (!authConfigured(cfg)) return null;
+  if (!cfg.PROVIDERS.includes(provider)) return null;
+  const back = redirect ?? globalThis.location?.href ?? "";
+  return `${cfg.URL.replace(/\/+$/, "")}/auth/v1/authorize`
+    + `?provider=${encodeURIComponent(provider)}`
+    + `&redirect_to=${encodeURIComponent(back)}`;
+}
+
+/**
+ * Read the tokens Supabase hands back in the URL FRAGMENT.
+ *
+ * Fragment, not query string, and that is a security property rather than a
+ * quirk: a fragment is never sent to a server and never lands in an access log
+ * or a Referer header. Which is also why the caller must strip it from the
+ * address bar immediately after reading — see authAdoptCallback.
+ *
+ * Returns null for an ordinary page load so callers can treat "no hash" and
+ * "not a callback" identically.
+ */
+function authParseCallback(hash = globalThis.location?.hash ?? "") {
+  const raw = String(hash).replace(/^#/, "");
+  if (!raw) return null;
+  const p = new URLSearchParams(raw);
+  const err = p.get("error_description") ?? p.get("error");
+  if (err) return { error: err };
+  const token = p.get("access_token");
+  if (!token) return null;
+  return {
+    token,
+    refresh: p.get("refresh_token") ?? null,
+    expiresIn: Number(p.get("expires_in") ?? 0) || null,
+  };
+}
+
+/**
+ * The provider's user object → the shape the rest of the app already speaks.
+ *
+ * Google and Apple disagree about nearly every field name, and Apple withholds
+ * the name entirely on every sign-in after the first, so the fallback chain
+ * matters more than it looks. Email-local-part is the last resort before "?",
+ * because a roster full of question marks is what this whole change was
+ * partly meant to fix.
+ */
+function authProfileFromUser(user) {
+  if (!user) return null;
+  const m = user.user_metadata ?? {};
+  const email = user.email ?? m.email ?? null;
+  const name =
+    m.full_name || m.name || m.preferred_username
+    || [m.given_name, m.family_name].filter(Boolean).join(" ").trim()
+    || (email ? email.split("@")[0] : "")
+    || "?";
+  return {
+    id: user.id,
+    name: String(name).slice(0, 14),   // the roster chip is 14 chars, everywhere
+    email,
+    avatar: m.avatar_url || m.picture || null,
+    provider: user.app_metadata?.provider ?? m.provider ?? null,
+  };
+}
+
+/* ---------- the loopback: no provider, nothing leaves the device ---------- */
+
+/* Mirrors netLoopback(). Tests and the offline bundle need an AUTH that answers
+   the same questions without a network, and every screen must be reviewable in
+   the gallery with no provider configured. */
+function authLoopback(user = null) {
+  AUTH.kind = "loopback";
+  AUTH.status = user ? "signed-in" : (authConfigured() ? "signed-out" : "unconfigured");
+  AUTH.user = user;
+  AUTH.error = null;
+  return AUTH;
+}
+
+/* ---------- the real one ---------- */
+
+const auStore = () => { try { return globalThis.localStorage; } catch { return null; } };
+
+function auSaveSession(s) {
+  const ls = auStore();
+  if (!ls) return;
+  try { s ? ls.setItem(AUTH_CONFIG.STORE_KEY, JSON.stringify(s)) : ls.removeItem(AUTH_CONFIG.STORE_KEY); }
+  catch { /* private mode: the session simply does not survive a reload */ }
+}
+
+function auLoadSession() {
+  const ls = auStore();
+  if (!ls) return null;
+  try { return JSON.parse(ls.getItem(AUTH_CONFIG.STORE_KEY) || "null"); } catch { return null; }
+}
+
+async function auFetchUser(token) {
+  const r = await fetch(`${AUTH_CONFIG.URL.replace(/\/+$/, "")}/auth/v1/user`, {
+    headers: { apikey: AUTH_CONFIG.ANON_KEY, Authorization: `Bearer ${token}` },
+  });
+  if (!r.ok) throw new Error(`user ${r.status}`);
+  return r.json();
+}
+
+/**
+ * Boot: adopt a fresh callback, or restore a stored session, or stay signed out.
+ * Returns AUTH either way and never throws — a provider outage must degrade to
+ * "signed out", never to a blank screen.
+ */
+async function authBoot({ onChange } = {}) {
+  if (!authConfigured()) return authLoopback(null);
+  AUTH.kind = "supabase";
+
+  const cb = authParseCallback();
+  if (cb?.error) {
+    AUTH.status = "signed-out"; AUTH.user = null; AUTH.error = cb.error;
+    auClearHash();
+    onChange?.(AUTH);
+    return AUTH;
+  }
+
+  const session = cb?.token ? { token: cb.token, refresh: cb.refresh } : auLoadSession();
+  // Strip the tokens from the address bar before anything can screenshot, share
+  // or bookmark them. history.replaceState keeps ?room= intact, which is the
+  // whole reason the redirect carried the full url out.
+  if (cb?.token) { auSaveSession(session); auClearHash(); }
+
+  if (!session?.token) { AUTH.status = "signed-out"; AUTH.user = null; onChange?.(AUTH); return AUTH; }
+
+  AUTH.status = "pending"; onChange?.(AUTH);
+  try {
+    AUTH.user = authProfileFromUser(await auFetchUser(session.token));
+    AUTH.status = AUTH.user ? "signed-in" : "signed-out";
+    AUTH.error = null;
+  } catch {
+    // An expired or revoked token is indistinguishable from a dead network here,
+    // and both mean the same thing to a player: sign in again.
+    auSaveSession(null);
+    AUTH.user = null; AUTH.status = "signed-out"; AUTH.error = "authExpired";
+  }
+  onChange?.(AUTH);
+  return AUTH;
+}
+
+function auClearHash() {
+  try {
+    const { pathname, search } = globalThis.location;
+    globalThis.history?.replaceState?.(null, "", pathname + search);
+  } catch { /* non-browser */ }
+}
+
+function authSignIn(provider) {
+  const url = authAuthorizeUrl(provider);
+  if (!url) { AUTH.error = "authUnavailable"; return false; }
+  AUTH.status = "pending";
+  globalThis.location.assign(url);
+  return true;
+}
+
+async function authSignOut() {
+  const s = auLoadSession();
+  auSaveSession(null);
+  AUTH.user = null; AUTH.status = "signed-out"; AUTH.error = null;
+  if (s?.token && authConfigured()) {
+    // Best effort. The local session is already gone, so a failure here costs
+    // the player nothing and must not block the UI.
+    try {
+      await fetch(`${AUTH_CONFIG.URL.replace(/\/+$/, "")}/auth/v1/logout`, {
+        method: "POST",
+        headers: { apikey: AUTH_CONFIG.ANON_KEY, Authorization: `Bearer ${s.token}` },
+      });
+    } catch { /* already signed out locally */ }
+  }
+  return AUTH;
 }
 
 
@@ -3692,6 +3964,12 @@ const FIXTURES = [
   // disabled buttons and reviewing that tells you nothing.
   { id: "24", screen: "FRIENDS", name: "Spill med venner",
     make: () => ({ u: { uname: "Ingrid", joinCode: "" }, g: null }) },
+
+  // Renders from AUTH_CONFIG.PROVIDERS, so both buttons are posed here even
+  // though the gate itself stays inert until AUTH-SETUP.md is done. Reviewing a
+  // screen nobody can currently reach is exactly what the gallery is for.
+  { id: "25", screen: "SIGNIN", name: "Logg inn",
+    make: () => ({ u: {}, g: null }) },
 ];
 
 // A posed lobby roster. Åse hosts; the last seat is deliberately disconnected so
@@ -3717,6 +3995,7 @@ function getFixture(id) {
 // Renders state; NEVER computes rules. Every scoring/option/win decision comes
 // from engine.js (Lane A). Bot behavior comes from bots.js. Sounds from audio.js.
 // Port of the frozen demo's flow + the PRD §5.4 omkamp the demo left out.
+
 
 
 
@@ -4394,6 +4673,11 @@ SCREENS.MODE = () => {
     // friends tapping the same button each became the host of their own empty
     // room and sat waiting for each other forever. FRIENDS asks which end of the
     // code you are holding. See the invariant in online.test.mjs.
+    // Identity is demanded for the networked modes and nowhere else — the rule
+    // lives in auth.js authRequired(), tested there, so this reads as policy
+    // rather than reimplementing it. authGate() is a no-op until Shun completes
+    // AUTH-SETUP.md; an unconfigured provider must never block play.
+    if (authGate(b.dataset.mode)) return;
     if (b.dataset.mode === "friends") { U.joinError = null; U.screen = "FRIENDS"; render(); return; }
     if (b.dataset.mode === "open") { netDoOpen(); return; }     // the one shared room
     U.mode = b.dataset.mode; U.screen = "PLAYERS"; render();
@@ -5741,6 +6025,48 @@ SCREENS.LOBBY_WAIT = () => {
    </div>`);
 };
 
+/* The gate. Returns true when it has taken the screen over, so every caller
+   reads as `if (authGate(mode)) return;`.
+
+   THREE conditions, and the middle one is the load-bearing one. A player is only
+   stopped when the mode is networked, a provider is actually configured, AND
+   there is no session. Until AUTH-SETUP.md is finished AUTH_CONFIG is empty and
+   this is a no-op, so the game ships and plays exactly as it does today instead
+   of putting up a login screen that cannot possibly succeed. An auth wall in
+   front of an unconfigured backend is the one failure with no way out of it. */
+function authGate(mode) {
+  if (!authRequired(mode) || !authConfigured() || AUTH.status === "signed-in") return false;
+  U.screen = "SIGNIN"; render();
+  return true;
+}
+
+SCREENS.SIGNIN = () => {
+  const busy = AUTH.status === "pending";
+  const has = (p) => AUTH_CONFIG.PROVIDERS.includes(p);
+  shell(`
+   <h2>${t("signinTitle")}</h2>
+   <p class="small" style="margin:-2px 0 14px">${t("signinSub")}</p>
+   ${AUTH.error ? `<div class="banner" style="background:var(--color-timer-urgent)">${t(AUTH.error)}</div>` : ""}
+   ${has("google") ? `<button class="btn" id="sigoogle" ${busy ? "disabled" : ""}>${t("signinGoogle")}</button>` : ""}
+   ${has("apple") ? `<button class="btn secondary" id="siapple" ${busy ? "disabled" : ""}>${t("signinApple")}</button>` : ""}
+   ${busy ? `<p class="small" style="text-align:center">${t("signinPending")}</p>` : ""}
+   <div style="flex:1"></div>
+   <p class="small" style="text-align:center;margin:0 0 8px">${t("signinPrivacy")}</p>
+   <button class="linkbtn" id="sihotseat">${t("signinHotseat")}</button>`);
+
+  const g = document.getElementById("sigoogle");
+  if (g) g.onclick = () => { play("confirm"); authSignIn("google"); render(); };
+  const a = document.getElementById("siapple");
+  if (a) a.onclick = () => { play("confirm"); authSignIn("apple"); render(); };
+
+  // Always an exit, the same principle as joinPlayBots on a failed join: there
+  // is a whole game here that needs no account and no network, and a sign-in
+  // screen must never be a dead end for someone who just wants to play.
+  document.getElementById("sihotseat").onclick = () => {
+    U.mode = "hotseat"; U.screen = "PLAYERS"; play("back"); render();
+  };
+};
+
 /* The front door for "Spill med venner" — one screen, both ends of the code.
 
    It exists because the menu used to host outright. Two friends tapping the same
@@ -6096,6 +6422,23 @@ document.addEventListener("visibilitychange", () => {
 });
 
 netLoopback();          // local play is its own host; online replaces this transport
+authLoopback();         // …and identity starts absent, the same way
+
+/* Adopt a sign-in callback or a stored session, without ever blocking first
+   paint. authBoot() is async and deliberately un-awaited: the game must render
+   and be playable while the provider is being asked, because a slow or dead
+   backend has no business delaying a menu whose first entry needs no account.
+   It is a no-op the moment AUTH_CONFIG is empty. */
+if (!bootFx && authConfigured()) {
+  authBoot({
+    onChange: () => {
+      // The signed-in name is a better default than a blank field, but never
+      // overwrites something the player typed themselves.
+      if (AUTH.user?.name && !U.uname) U.uname = AUTH.user.name;
+      render();
+    },
+  });
+}
 
 // A shared link drops you straight at the join screen with the code filled in.
 // This is the whole point of "send a link to your friends": no menu to navigate.
