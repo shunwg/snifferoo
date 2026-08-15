@@ -38,6 +38,21 @@ Philosophy: **5–6 active MCPs max.** Every MCP tool definition eats context; a
 
 **game-feel vs motion-designer** — the split is deliberate and neither may drift into the other. `game-feel` owns *game-state* motion (pawn hops, nose growth, card pops, chip flips, screen entrances), input response, haptics, sound pairing and pacing. `motion-designer` owns *celebration overlays* only, as Lottie JSON. Grounded in Swink's *Game Feel* (2009) ch. 1, which classifies a turn-based bluffing game as "naked polish" — so polish carries the entire feel load, and `game-feel` exists to stop that being spent at random.
 
+### Third-party skills (usable, but not ours)
+`.claude/skills/game-design` — installed 2026-08-15 at the user's request from
+`rbergman/dark-matter-marketplace`. A single-mechanic evaluation framework: the 5-Component Filter
+(Clarity, Motivation, Response, Satisfaction, Fit), a Numbers Policy that forbids unlabelled
+figures, a state-machine checklist and a symptom-to-skill debugging table. Genuinely useful here,
+and its Response/Satisfaction components trace to the same Swink source as our **game-feel**.
+
+Two caveats, both in its `PROVENANCE.md`. It bills itself as a *hub* and routes to 26 sibling
+skills, **25 of which are not installed** — the self-contained frameworks work, the "Deep Dive"
+routing does not. And the source repo carries **no licence**, so it is fine on disk but wants
+resolving before this repo goes public.
+
+The marketplace also ships its own `game-feel`. **It was not installed and must not be** — ours is
+the house skill above, and `Tools/check-game-feel.mjs` gates against it.
+
 ### Reference-only skills (not house skills — do not use for Snifferoo work)
 `.claude/skills/reference-game-developer` (Unity/Unreal, MIT) and `.claude/skills/reference-shader-techniques` (HLSL/GLSL) were installed 2026-07-26 from the [Snyk game-dev skills roundup](https://snyk.io/articles/top-claude-skills-3d-modeling-game-dev-shader-programming/) at the user's request, as background reading. **Neither applies to this stack** — we have no game engine, no physics engine, no WebGL and no shader stage. Their auto-triggers were removed for exactly that reason: upstream they fire on "game development", "game optimization", "visual effects" and "rendering optimization", which would have loaded Unity object-pooling advice into CSS work. Each carries a `PROVENANCE.md` with the fetch record, the licence position, and the original frontmatter. For anything they sound like they cover, use **game-feel**.
 
