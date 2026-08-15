@@ -28,14 +28,43 @@ const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const PORT = 8787;
 const BASE = `http://localhost:${PORT}/Lab/index.html`;
 const OUT = join(ROOT, "Screens", "png");
-const MIN_BYTES = 10 * 1024; // a real 430×932 frame is far bigger than 10 KB
+const MIN_BYTES = 10 * 1024; // a real 534×932 frame is far bigger than 10 KB
 
+/* CAPTURE WIDTH — 534, NOT 430, AND THE 430 WAS A SILENT BUG.
+ *
+ * Headless Chrome on Windows will not open a window narrower than about 534 CSS
+ * px. Ask for 430 and you get a 512-px LAYOUT VIEWPORT and a 430-px SCREENSHOT:
+ * the page is composed 512 wide and then cropped to 430, losing 82 px off the
+ * right of every single PNG. Measured, not guessed — a probe page reporting its
+ * own innerWidth returns 512 under `--window-size=430,932`, and the "Lag rom"
+ * button on screen 24 came out with a 28 px left margin and a 0 px right one.
+ * The whole mute button was missing from the top bar and nobody noticed for
+ * weeks, because a cropped screenshot still looks like a screenshot.
+ *
+ * 534 is the narrowest width Chrome will honour, so it is the narrowest capture
+ * that is not a lie. It costs nothing in fidelity: #app is max-width:480px, so
+ * every viewport at or above 480 renders the app identically — 534 simply shows
+ * it whole, with the page background either side, exactly as on a wide phone.
+ *
+ * Do not "restore" 430 to make the frames phone-shaped. Phone-shaped and
+ * complete are not both available from this API, and complete wins. */
+const SHOT_W = 534;
+const SHOT_H = 932;
+
+/* CHROME BEFORE EDGE, and that order is load-bearing rather than a preference.
+ *
+ * Edge was first here, and it ignores --window-size in headless: asked for 534
+ * it returns a 430-wide frame regardless, which is where the cropped screens
+ * above actually came from. Chrome honours the flag and produces the complete
+ * frame. Edge stays in the list as a fallback for a machine with no Chrome —
+ * the shots will be cropped there, which is worse than nothing only if someone
+ * commits them, so the header printed at startup names the browser used. */
 const CANDIDATES = [
   process.env.SNAP_BROWSER,
-  "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
-  "C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe",
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
   "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
+  "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+  "C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe",
   process.env.LOCALAPPDATA && join(process.env.LOCALAPPDATA, "Google\\Chrome\\Application\\chrome.exe"),
 ].filter(Boolean);
 
@@ -60,7 +89,7 @@ async function main() {
   if (!browser) {
     console.error("No Edge/Chrome found. Either set SNAP_BROWSER=<path to msedge.exe/chrome.exe>,");
     console.error("or snap manually: node Tools/serve-lab.mjs → open");
-    console.error(`  ${BASE}?fixture=NN  and screenshot at 430×932 into Screens/png/NN-<screen>.png`);
+    console.error(`  ${BASE}?fixture=NN  and screenshot at ${SHOT_W}×${SHOT_H} into Screens/png/NN-<screen>.png`);
     process.exit(1);
   }
 
@@ -85,7 +114,7 @@ async function main() {
         "--disable-extensions", "--mute-audio", "--hide-scrollbars",
         `--user-data-dir=${profile}`,
         "--force-prefers-reduced-motion",
-        "--window-size=430,932",
+        `--window-size=${SHOT_W},${SHOT_H}`,
         "--virtual-time-budget=4000",
         `--screenshot=${png}`,
         `${BASE}?fixture=${f.id}`,
