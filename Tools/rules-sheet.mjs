@@ -73,7 +73,7 @@ function renderRound(r) {
   const header = `| ${r.players.map((_, i) => name(r.players, i)).join(" | ")} |`;
   const sep = `|${r.players.map(() => "---").join("|")}|`;
   const deltas = `| ${r.players.map((_, i) => `**+${r.expected.deltas[i] ?? 0}**`).join(" | ")} |`;
-  const noses = `| ${r.players.map((_, i) => `👃 ${r.expected.bluffVotes[i] ?? 0}`).join(" | ")} |`;
+  const noses = `| ${r.players.map((_, i) => `👃 ${r.expected.backing[i] ?? 0}`).join(" | ")} |`;
   return [
     `### ${r.id.split("-")[0]} · ${LABELS[r.id]}`,
     "",

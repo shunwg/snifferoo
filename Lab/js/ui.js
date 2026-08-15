@@ -19,7 +19,7 @@ import {
 } from "./clock.js";
 import {
   RATING, ratingDeltas, ratingApply, ratingLoad, ratingSave, ratingReset,
-  ratingNoseCap, ratingTier,
+  ratingBackingCap, ratingTier,
 } from "./rating.js";
 import {
   AUTH, AUTH_CONFIG, authRequired, authConfigured, authBoot, authSignIn, authSignOut, authLoopback,
@@ -601,7 +601,7 @@ SCREENS.HOME = () => {
    <div style="flex:1"></div>
    <div class="hero">
      <div class="home-badge bob">${LOGO(92)}</div>
-     <span class="eyebrow">${t("fearNose")}</span>
+     <span class="eyebrow">${t("tagline")}</span>
      <h1 style="font-size:clamp(40px,12vw,54px)">${t("title")}</h1>
      <p class="sub" style="margin:0">${t("homePitch")}</p>
    </div>
@@ -632,7 +632,7 @@ SCREENS.RULES = () => {
    <div class="nose-demo" aria-hidden="true">
      ${[1, 2, 3].map((n) => face({ color: "var(--color-player-2)", notch: n })).join("")}
    </div>
-   <p class="small" style="text-align:center;margin-top:0">${t("rulesNose")}</p>
+   <p class="small" style="text-align:center;margin-top:0">${t("rulesBacking")}</p>
    <div class="card">
      <span class="eyebrow">${t("rulesScoreEyebrow")}</span>
      <div class="scorerow"><span class="pt truth">+2</span><span>${t("rulesScore1")}</span></div>
@@ -802,7 +802,7 @@ function startGame() {
       const netPid = U.netSeats?.[i] ?? null;
       const bot = netPid ? false : (ownScreen() && i > 0);
       return {
-        name, color: AVA[i], score: 0, bluffVotes: 0, dropped: false,
+        name, color: AVA[i], score: 0, backing: 0, dropped: false,
         // Seat 0 is this device in local play; online it is whichever pid the
         // lobby put there. Bots and other hands on the same phone don't need an
         // identity that outlives the game.
@@ -931,7 +931,7 @@ function seatPending() {
     if (G.players.length >= NET_CONFIG.MAX_PLAYERS) break;
     const seat = G.players.length;
     G.players.push({
-      name: s.name, color: AVA[seat % AVA.length], score: floor, bluffVotes: 0,
+      name: s.name, color: AVA[seat % AVA.length], score: floor, backing: 0,
       dropped: false, pid: s.pid, kind: "remote",
     });
     last = { note: t("lateSeated", esc(s.name)), seat };
@@ -984,7 +984,7 @@ SCREENS.GM_INTRO = () => {
    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;">
      <div class="banner gm">${G.inOmkamp ? t("omkamp") : t("roundN", G.round)}</div>
      <h1 style="color:var(--color-text-on-bg)">${ownScreen() && userIsGm() ? t("youAreGm") : t("gmIs", esc(gm.name))}</h1>
-     <p class="sub">${t("fearNose")}</p>
+     <p class="sub">${t("tagline")}</p>
      <div style="display:flex;justify-content:center;margin:16px 0;">
        ${face({ color: gm.color, size: 68, tone: "gm", brand: true, bob: true })}</div>
    </div>
@@ -1312,7 +1312,7 @@ function computeRound() {
   G.deltas = result.deltas;
   G.gmStole = result.gmStole;
   G.phase = "reveal";            // the truth may now travel (netProject, C9)
-  result.bluffVotes.forEach((n, i) => { G.players[i].bluffVotes += n; });
+  result.backing.forEach((n, i) => { G.players[i].backing += n; });
   if (G.doubles.length) setTimeout(() => play("doubleHit"), 400);   // surprise sparkle as the reveal opens
 }
 
@@ -1442,7 +1442,7 @@ SCREENS.BOARD = () => {
    <div style="margin-top:10px">
      ${G.players.map((p, i) => `<div class="scoreline">
         <span><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${p.color}"></span>
-        ${esc(p.name)} ${i === G.gm ? markCrown(11) : ""} <span class="small">${markRat(10)} ${p.bluffVotes}</span>
+        ${esc(p.name)} ${i === G.gm ? markCrown(11) : ""} <span class="small">${markRat(10)} ${p.backing}</span>
         ${G.deltas?.[i] ? `<b>+${G.deltas[i]}</b>` : ""}</span>
         <span id="sc${i}">${p.score} ${t("pts")}</span></div>`).join("")}
    </div>
@@ -1669,15 +1669,15 @@ SCREENS.OMKAMP = () => {
 /* ---------- winner ---------- */
 SCREENS.WINNER = () => {
   const winners = (G.winnersIdx ?? []).map((i) => G.players[i]);
-  const liar = [...G.players].sort((a, b) => b.bluffVotes - a.bluffVotes)[0];
+  const liar = [...G.players].sort((a, b) => b.backing - a.backing)[0];
   shell(`
    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;">
      <div style="display:flex;justify-content:center;margin-bottom:4px">${markRat(38)}</div>
      <h1>${G.shared ? t("shared") : t("winner", esc(winners[0]?.name ?? ""))}</h1>
      <p class="sub">${t("restOfYou")}</p>
      <div class="card gullnese-card" style="position:relative;display:flex;gap:12px;align-items:center;justify-content:center;">
-       ${face({ color: liar.color, size: 48, mood: "delighted", notch: liar.bluffVotes, grow: true, tone: "gold" })}
-       <b>${t("goldNose", esc(liar.name))} (${markRat(12)} ${liar.bluffVotes})</b>
+       ${face({ color: liar.color, size: 48, mood: "delighted", notch: liar.backing, grow: true, tone: "gold" })}
+       <b>${t("topBacking", esc(liar.name))} (${markRat(12)} ${liar.backing})</b>
        <span class="gullnese-fx" id="gullnesefx"></span></div>
      <div style="margin-top:14px">${[...G.players].sort((a, b) => b.score - a.score).map((p) => `
         <div class="scoreline"><span>${dot(p.color, p.name)} ${esc(p.name)}</span><span>${p.score} ${t("pts")}</span></div>`).join("")}</div>
@@ -2303,7 +2303,7 @@ function netApplyRatings(msg) {
   G.ratingMine = mine;
   const seat = mySeat();
   PROFILE = ratingApply(PROFILE, mine, {
-    nose: Math.min(G.players[seat]?.bluffVotes ?? 0, ratingNoseCap(G.players.length, G.round)),
+    nose: Math.min(G.players[seat]?.backing ?? 0, ratingBackingCap(G.players.length, G.round)),
     won: (G.winnersIdx ?? []).includes(seat),
   });
   ratingSave(PROFILE);
@@ -2336,7 +2336,7 @@ function settleRating() {
   G.ratingMine = mine;                 // shown on the winner screen
   const seat = mySeat();
   PROFILE = ratingApply(PROFILE, mine, {
-    nose: Math.min(G.players[seat]?.bluffVotes ?? 0, ratingNoseCap(G.players.length, G.round)),
+    nose: Math.min(G.players[seat]?.backing ?? 0, ratingBackingCap(G.players.length, G.round)),
     won: (G.winnersIdx ?? []).includes(seat),
   });
   ratingSave(PROFILE);
@@ -2361,7 +2361,7 @@ SCREENS.PROFILE = () => {
    <div class="card">
      <div class="scoreline"><span>${t("profileGames")}</span><span>${p.games}</span></div>
      <div class="scoreline"><span>${t("profileWins")}</span><span>${p.wins}</span></div>
-     <div class="scoreline"><span>${t("profileNose")}</span><span>👃 ${p.nose}</span></div>
+     <div class="scoreline"><span>${t("profileBacking")}</span><span>👃 ${p.nose}</span></div>
    </div>
    ${last.length ? `<div class="card"><b>${t("profileLast")}</b>
      <div class="chiprow" style="margin-top:8px">${last.map((h) => `

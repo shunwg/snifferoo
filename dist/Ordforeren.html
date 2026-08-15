@@ -1216,13 +1216,13 @@ const STR = {
   nb: {
     title: "Ordføreren", demo: "lab", pickLang: "Velg språk",
     mode: "Hvordan vil du spille?", hotseatName: "Én telefon", hotseatSub: "Én telefon går rundt bordet.",
-    partyName: "Hver sin telefon", partySub: "Motspillerne er roboter. Du starter som spillmester.",
+    partyName: "Hver sin telefon", partySub: "Motspillerne er roboter. Du starter som ordstyrer.",
     players: "Hvem spiller?", addPlayer: "+ Legg til spiller", namePh: "Navn…", needPlayers: "3–8 spillere",
     yourName: "Ditt navn", bots: "Roboter", next: "Neste",
     length: "Spillengde", theme: "Brett", kort: "Kort · til 8", std: "Standard · til 15", mara: "Maraton · til 25",
     salongen: "Salongen", fjellet: "Fjellet", rom: "Verdensrommet", begin: "Start spillet",
-    gmIs: (n) => `${n} er spillmester`, youAreGm: "Du er spillmester", fearNose: "Frykt nesen.", roundN: (r) => `Runde ${r}`,
-    gmHint: "Bare spillmesteren ser dette skjermbildet.",
+    gmIs: (n) => `${n} er ordstyrer`, youAreGm: "Du er ordstyrer", tagline: "Les rommet.", roundN: (r) => `Runde ${r}`,
+    gmHint: "Bare ordstyreren ser dette skjermbildet.",
     theWord: "Ordet er", secret: "Hemmelig sannhet", peek: "Hold for å se sannheten",
     decoys: "Dine falske svar (0–2, ett holder)", decoyPh: (i) => `Falskt svar ${i}…`,
     passOn: "Send telefonen videre", giveTo: (n) => `Gi telefonen til ${n}`, noPeek: "Ikke titt.", hold: "Hold",
@@ -1237,29 +1237,29 @@ const STR = {
     timerBluffLabel: "Tid til å dikte en løgn", timerVoteLabel: "Tid til å stemme",
     timerHint: "Rekker du ikke fristen, går runden videre uten svaret ditt. Du er med igjen neste runde.",
     allIn: "Alle løgnene er inne.", waitingFor: "Venter på", thinkingDots: "tenker…", openVote: "Åpne avstemning",
-    gmComposing: (n) => `${n} skriver falske svar`, shuffling: "Spillmesteren blander kortene…",
+    gmComposing: (n) => `${n} skriver falske svar`, shuffling: "Ordstyreren blander kortene…",
     votingTime: (n) => `${n}, hva er sannheten?`, yourVote: "Hva er sannheten?", cantOwn: "(ditt eget svar er skjult)",
     votesIn: "Stemmene tikker inn", youVoted: "Din stemme er levert.",
     revealTitle: "Avsløringen",
     tapReveal: "Trykk for å avsløre neste", skip: "Neste ▸", votes: "stemmer", by: "skrevet av", theTruth: "SANNHETEN",
-    you: "deg", gmDecoy: "spillmesterens falske svar", gmSteal: "Ingen fant sannheten. Spillmesteren tar +2.",
+    you: "deg", gmDecoy: "ordstyrerens falske svar", gmSteal: "Ingen fant sannheten. Ordstyreren tar +2.",
     doubleHit: (n) => `${n} skrev sannheten uten å vite det. +3`, toBoard: "Til brettet!",
-    board: "Brettet", boardSub: (t) => `Først til ${t}. Sjekkes når alle har vært spillmester.`,
+    board: "Brettet", boardSub: (t) => `Først til ${t}. Sjekkes når alle har vært ordstyrer.`,
     nextRound: "Neste runde", winner: (n) => `${n} vant!`, shared: "Delt seier!",
-    restOfYou: "Resten av dere: godt forsøk.", goldNose: (n) => `Gullnesen: ${n}. Spillets beste løgner.`,
+    restOfYou: "Resten av dere: godt forsøk.", topBacking: (n) => `Størst oppslutning: ${n}. Rommet trodde på deg.`,
     playAgain: "Spill igjen", pts: "p",
-    rules: "+2 riktig svar · +1 per stemme på din løgn · +2 til spillmester hvis ingen fant sannheten",
+    rules: "+2 riktig svar · +1 oppslutning per stemme på ditt forslag · +2 til ordstyreren hvis ingen fant fasiten",
     omkamp: "Omkamp!", omkampSub: (ns) => `${ns} står likt forbi mål. Én ekstra runde, og alle stemmer.`,
-    homePitch: "Alle lyver. Bare én forteller sant.",
+    homePitch: "Et bløffespill om å vinne rommets oppslutning.",
     homeNewGame: "Nytt spill", homeHowTo: "Slik spiller du", homeAbout: "Om",
     rulesTitle: "Slik spiller du", rulesSub: "Én runde på 30 sekunder",
-    rulesStep1t: "Spillmesteren trekker", rulesStep1b: "Ett obskurt ord. Bare spillmesteren får se hva det betyr.",
+    rulesStep1t: "Ordstyreren trekker", rulesStep1b: "Ett obskurt ord. Bare ordstyreren får se hva det betyr.",
     rulesStep2t: "Alle andre dikter", rulesStep2b: "Skriv en forklaring så troverdig at den kunne stått i ordboka.",
-    rulesStep3t: "Mesteren åpner avstemningen", rulesStep3b: "Alle svarene stokkes, og hvert av dem får en bokstav.",
+    rulesStep3t: "Ordstyreren åpner avstemningen", rulesStep3b: "Alle svarene stokkes, og hvert av dem får en bokstav.",
     rulesStep4t: "Alle stemmer", rulesStep4b: "Finn den ekte betydningen. Ditt eget svar er skjult for deg.",
-    rulesStep5t: "Avsløringen", rulesStep5b: "Løgnene avsløres. Nesen vokser ett hakk for hver som gikk på den.",
+    rulesStep5t: "Avsløringen", rulesStep5b: "Forslagene avsløres. Oppslutningen din vokser ett hakk for hver som trodde på deg.",
     rulesStep6t: "Kappløpet", rulesStep6b: "Poeng flytter brikken din mot mål. Først forbi vinner.",
-    rulesNose: "Én stemme = ett hakk lengre nese. Frykt den.",
+    rulesBacking: "Én stemme = ett hakk oppslutning. Å ha rett er valgfritt.",
     rulesScoreEyebrow: "Poeng",
     rulesScore1: "Du stemte på sannheten",
     rulesScore2: "Per stemme løgnen din lurte",
@@ -1267,16 +1267,16 @@ const STR = {
     rulesScore4: "Du skrev nesten sannheten",
     rulesBack: "Tilbake",
     aboutTitle: "Om Ordføreren",
-    aboutBlurb: "Et selskapsspill om å lyve med stil. Moroa lager dere selv. Appen holder styr på poengene.",
+    aboutBlurb: "Ordføreren er et sosialt bløffespill om å vinne rommets oppslutning. Én spiller kjenner fasiten. Alle andre skriver en troverdig, men oppdiktet forklaring. Svarene vises anonymt, før alle stemmer på det de tror er riktig. Hver stemme på svaret ditt gir oppslutning. Du vinner ikke nødvendigvis ved å ha rett, men ved å være mest overbevisende, og ved å lese rommet godt nok til å vite hva de andre vil tro på. Den som har mest oppslutning til slutt, blir Ordføreren.",
     aboutCredits: "Skrifter og lyder: Fredoka (OFL), lottie-web (MIT), Kenney (CC0).",
     // Honest, not reassuring: the moment a profile is persisted, "vi lagrer
     // ingenting" is an over-claim. PRD §10 / ONLINE-PLAY.md «den ærlige linja».
     // Oppdatert 2026-08-15: med innlogging er «bare i denne nettleseren» ikke
     // lenger sant for de som logger inn, og da skal det ikke stå der heller.
-    aboutPrivacy: "Ingen server ser selve spillet. Kort, løgner og stemmer går rett mellom telefonene. Spiller du på én telefon, ligger profilen din (navn, rating og nesetelling) bare i denne nettleseren. Logger du inn med Google eller Apple, lagrer vi navn, bilde og rating hos Supabase. Du kan slette alt når du vil.",
+    aboutPrivacy: "Ingen server ser selve spillet. Kort, løgner og stemmer går rett mellom telefonene. Spiller du på én telefon, ligger profilen din (navn, rating og oppslutning) bare i denne nettleseren. Logger du inn med Google eller Apple, lagrer vi navn, bilde og rating hos Supabase. Du kan slette alt når du vil.",
     homeProfile: "Profilen din",
     profileTitle: "Profilen din", profileGames: "Spill", profileWins: "Seire",
-    profileNose: "Neser samlet", profileLast: "Siste spill",
+    profileBacking: "Oppslutning samlet", profileLast: "Siste spill",
     profileBest: (n) => `Toppnotering: ${n}`,
     profileWipe: "Slett profilen", back: "Tilbake",
     profilePrivacy: "Alt dette ligger bare på denne enheten. Sletter du det, er det borte. Vi har ingen kopi.",
@@ -1348,20 +1348,22 @@ const STR = {
     setupForRoom: "Du er vert. Dette gjelder hele rommet.",
   },
   en: {
-    // NOT a translation of "Ordføreren" — a sibling pun with the same structure.
+    // NOT a translation of "Ordføreren" — a sibling pun that does the same work.
     // Ordfører decomposes to ord + fører, "word-leader", and is everyday Norwegian
-    // for a mayor. "Speaker" carries the identical double meaning in English: one
-    // who speaks, and the elected chair who governs who may speak. "The Mayor"
-    // would be the literal answer and would throw the joke away.
-    title: "The Speaker", demo: "lab", pickLang: "Choose language",
+    // for a mayor: a local, elected, slightly self-important office. English has no
+    // such compound, so Wor(l)d-Leader builds one — word and world in the same
+    // breath — and scales the satire from a town hall to an international assembly,
+    // which is where the English copy sets the game. Shun's, and better than the
+    // "The Speaker" this briefly shipped as, which was accurate and inert.
+    title: "Wor(l)d-Leader", demo: "lab", pickLang: "Choose language",
     mode: "How do you want to play?", hotseatName: "One phone", hotseatSub: "One phone goes round the table.",
-    partyName: "A phone each", partySub: "Your opponents are bots. You start as game master.",
+    partyName: "A phone each", partySub: "Your opponents are bots. You start as the Chair.",
     players: "Who's playing?", addPlayer: "+ Add player", namePh: "Name…", needPlayers: "3–8 players",
     yourName: "Your name", bots: "Bots", next: "Next",
     length: "Game length", theme: "Board", kort: "Short · to 8", std: "Standard · to 15", mara: "Marathon · to 25",
     salongen: "The Parlor", fjellet: "The Mountain", rom: "Outer Space", begin: "Start the game",
-    gmIs: (n) => `${n} is game master`, youAreGm: "You are game master", fearNose: "Fear the nose.", roundN: (r) => `Round ${r}`,
-    gmHint: "Only the game master sees this screen.",
+    gmIs: (n) => `${n} is the Chair`, youAreGm: "You are the Chair", tagline: "Read the chamber.", roundN: (r) => `Round ${r}`,
+    gmHint: "Only the the Chair sees this screen.",
     theWord: "The word is", secret: "Secret truth", peek: "Hold to see the truth",
     decoys: "Your false answers (0–2, one is enough)", decoyPh: (i) => `False answer ${i}…`,
     passOn: "Pass the phone on", giveTo: (n) => `Give the phone to ${n}`, noPeek: "No peeking.", hold: "Hold",
@@ -1376,29 +1378,29 @@ const STR = {
     timerBluffLabel: "Time to write a lie", timerVoteLabel: "Time to vote",
     timerHint: "Miss the deadline and the round moves on without your answer. You're back in next round.",
     allIn: "All lies accounted for.", waitingFor: "Waiting for", thinkingDots: "thinking…", openVote: "Open the vote",
-    gmComposing: (n) => `${n} is composing decoys`, shuffling: "The game master shuffles the cards…",
+    gmComposing: (n) => `${n} is composing decoys`, shuffling: "The the Chair shuffles the cards…",
     votingTime: (n) => `${n}, what's the truth?`, yourVote: "What's the truth?", cantOwn: "(your own answer is hidden)",
     votesIn: "Votes are coming in", youVoted: "Your vote is in.",
     revealTitle: "The Reveal",
     tapReveal: "Tap to reveal the next one", skip: "Next ▸", votes: "votes", by: "written by", theTruth: "THE TRUTH",
-    you: "you", gmDecoy: "the game master's false answer", gmSteal: "Nobody found the truth. The game master takes +2.",
+    you: "you", gmDecoy: "the the Chair's false answer", gmSteal: "Nobody found the truth. The the Chair takes +2.",
     doubleHit: (n) => `${n} simply wrote the truth. +3!`, toBoard: "To the board!",
-    board: "The board", boardSub: (t) => `First to ${t}. Checked when everyone has been game master.`,
+    board: "The board", boardSub: (t) => `First to ${t}. Checked when everyone has been the Chair.`,
     nextRound: "Next round", winner: (n) => `${n} wins!`, shared: "Shared victory!",
-    restOfYou: "The rest of you: nice try.", goldNose: (n) => `Golden Nose: ${n}. The game's best liar.`,
+    restOfYou: "The rest of you: nice try.", topBacking: (n) => `Most backing: ${n}. The chamber believed you.`,
     playAgain: "Play again", pts: "p",
-    rules: "+2 correct vote · +1 per vote your lie gets · +2 to the GM if nobody finds the truth",
+    rules: "+2 correct vote · +1 backing per vote your motion gets · +2 to the Chair if nobody finds the truth",
     omkamp: "Sudden death!", omkampSub: (ns) => `${ns} are tied past the line. One extra round, and everyone votes.`,
-    homePitch: "Everyone's lying. Only one is telling the truth.",
+    homePitch: "A political party game about winning the room's backing.",
     homeNewGame: "New game", homeHowTo: "How to play", homeAbout: "About",
     rulesTitle: "How to play", rulesSub: "One round in 30 seconds",
-    rulesStep1t: "The game master draws", rulesStep1b: "One obscure word. Only the game master sees what it means.",
+    rulesStep1t: "The the Chair draws", rulesStep1b: "One obscure word. Only the the Chair sees what it means.",
     rulesStep2t: "Everyone else invents", rulesStep2b: "Write a definition so credible it could sit in the dictionary.",
     rulesStep3t: "The master opens the vote", rulesStep3b: "Lies, truth and decoys are shuffled into A, B, C …",
     rulesStep4t: "Everyone votes", rulesStep4b: "Find the real meaning. Your own answer is hidden from you.",
-    rulesStep5t: "The reveal", rulesStep5b: "The lies are unmasked. The nose grows a notch for every vote it fooled.",
+    rulesStep5t: "The reveal", rulesStep5b: "The motions are unmasked. Your backing grows a notch for every delegate who believed you.",
     rulesStep6t: "The race", rulesStep6b: "Points move your pawn toward the goal. First past the line wins.",
-    rulesNose: "One vote = one notch longer nose. Fear it.",
+    rulesBacking: "One vote = one notch of backing. Being right is optional.",
     rulesScoreEyebrow: "Points",
     rulesScore1: "You voted for the truth",
     rulesScore2: "Per vote your lie fooled",
@@ -1406,13 +1408,13 @@ const STR = {
     rulesScore4: "Double hit: you nearly wrote the truth",
     rulesBack: "Back",
     aboutTitle: "About Ordføreren",
-    aboutBlurb: "A party game about lying with style. You make the fun yourselves. The app just keeps score.",
+    aboutBlurb: "Wor(l)d-Leader is a political party game set in a playful international assembly. One delegate knows the real answer. Everyone else writes a believable alternative, then the room votes anonymously. Your job is not simply to sound smart, it is to read the chamber, understand what people are ready to believe, and build a coalition behind your version. Each vote gives you backing. Facts matter, but support matters more. By the end, the delegate with the most backing is elected World-Leader.",
     aboutCredits: "Fonts and audio: Fredoka (OFL), lottie-web (MIT), Kenney (CC0).",
     // Honest, not reassuring — see the nb note above.
-    aboutPrivacy: "No server sees the game itself. Cards, lies and votes go straight between the phones. If you play on one phone, your profile (name, rating and nose count) lives only in this browser. If you sign in with Google or Apple, we store your name, picture and rating with Supabase. You can delete all of it whenever you like.",
+    aboutPrivacy: "No server sees the game itself. Cards, lies and votes go straight between the phones. If you play on one phone, your profile (name, rating and backing) lives only in this browser. If you sign in with Google or Apple, we store your name, picture and rating with Supabase. You can delete all of it whenever you like.",
     homeProfile: "Your profile",
     profileTitle: "Your profile", profileGames: "Games", profileWins: "Wins",
-    profileNose: "Noses collected", profileLast: "Recent games",
+    profileBacking: "Backing collected", profileLast: "Recent games",
     profileBest: (n) => `Personal best: ${n}`,
     profileWipe: "Delete profile", back: "Back",
     profilePrivacy: "All of this lives on this device only. Delete it and it's gone. We hold no copy.",
@@ -1700,7 +1702,7 @@ function readyToOpenVote({ expected, bluffs, gmDecoyDone }) {
 // bluff-vote tally, and whether the GM stole the round.
 function scoreRound({ playerCount, gm, options, votes, doubles = [] }) {
   const deltas = Array(playerCount).fill(0);
-  const bluffVotes = Array(playerCount).fill(0);
+  const backing = Array(playerCount).fill(0);
   for (const d of doubles) deltas[d] += 3; // dobbeltreff (+3, merged with truth)
 
   const votersByOption = new Map();
@@ -1721,14 +1723,14 @@ function scoreRound({ playerCount, gm, options, votes, doubles = [] }) {
       const share = Math.ceil(voters.length / opt.authors.length);
       for (const a of opt.authors) {
         deltas[a] += share;
-        bluffVotes[a] += voters.length;
+        backing[a] += voters.length;
       }
     }
   }
 
   const gmStole = !truthFound;
   if (gmStole) deltas[gm] += 2; // "Spillmesteren vant runden!"
-  return { deltas, gmStole, bluffVotes };
+  return { deltas, gmStole, backing };
 }
 
 // -- game length & fairness (PRD §5.4) ----------------------------------------
@@ -1762,7 +1764,7 @@ function omkampResolve({ scores, participants, deltas }) {
 function createGame({ players, target, rng }) {
   return {
     phase: "card",
-    players: players.map((name) => ({ name, score: 0, bluffVotes: 0, dropped: false })),
+    players: players.map((name) => ({ name, score: 0, backing: 0, dropped: false })),
     target,
     round: 1,
     gm: 0,
@@ -1879,7 +1881,7 @@ function dispatch(state, action) {
         options: state.options, votes: state.votes, doubles: state.doubles,
       });
       const players = state.players.map((p, i) => ({
-        ...p, score: p.score + result.deltas[i], bluffVotes: p.bluffVotes + result.bluffVotes[i],
+        ...p, score: p.score + result.deltas[i], backing: p.backing + result.backing[i],
       }));
       return { ...state, phase: "reveal", players, lastResult: result };
     }
@@ -2232,7 +2234,7 @@ function ratingApply(profile, delta, { nose = 0, won = false } = {}) {
 
 // Career nose count has a ceiling per game: every other player can vote for you
 // at most once per round. Anything above that didn't happen.
-const ratingNoseCap = (playerCount, rounds) =>
+const ratingBackingCap = (playerCount, rounds) =>
   Math.max(0, (playerCount - 1) * Math.max(0, rounds));
 
 // -- storage ------------------------------------------------------------------
@@ -3761,7 +3763,7 @@ function fxMakeG(overrides = {}) {
       name,
       color: AVA[i],
       score: [6, 8, 5, 3][i],
-      bluffVotes: [2, 4, 1, 5][i],
+      backing: [2, 4, 1, 5][i],
       dropped: false,
       pid: `fx:${i}`,          // fixtures are posed, never networked
       kind: "human",
@@ -4603,7 +4605,7 @@ SCREENS.HOME = () => {
    <div style="flex:1"></div>
    <div class="hero">
      <div class="home-badge bob">${LOGO(92)}</div>
-     <span class="eyebrow">${t("fearNose")}</span>
+     <span class="eyebrow">${t("tagline")}</span>
      <h1 style="font-size:clamp(40px,12vw,54px)">${t("title")}</h1>
      <p class="sub" style="margin:0">${t("homePitch")}</p>
    </div>
@@ -4634,7 +4636,7 @@ SCREENS.RULES = () => {
    <div class="nose-demo" aria-hidden="true">
      ${[1, 2, 3].map((n) => face({ color: "var(--color-player-2)", notch: n })).join("")}
    </div>
-   <p class="small" style="text-align:center;margin-top:0">${t("rulesNose")}</p>
+   <p class="small" style="text-align:center;margin-top:0">${t("rulesBacking")}</p>
    <div class="card">
      <span class="eyebrow">${t("rulesScoreEyebrow")}</span>
      <div class="scorerow"><span class="pt truth">+2</span><span>${t("rulesScore1")}</span></div>
@@ -4804,7 +4806,7 @@ function startGame() {
       const netPid = U.netSeats?.[i] ?? null;
       const bot = netPid ? false : (ownScreen() && i > 0);
       return {
-        name, color: AVA[i], score: 0, bluffVotes: 0, dropped: false,
+        name, color: AVA[i], score: 0, backing: 0, dropped: false,
         // Seat 0 is this device in local play; online it is whichever pid the
         // lobby put there. Bots and other hands on the same phone don't need an
         // identity that outlives the game.
@@ -4933,7 +4935,7 @@ function seatPending() {
     if (G.players.length >= NET_CONFIG.MAX_PLAYERS) break;
     const seat = G.players.length;
     G.players.push({
-      name: s.name, color: AVA[seat % AVA.length], score: floor, bluffVotes: 0,
+      name: s.name, color: AVA[seat % AVA.length], score: floor, backing: 0,
       dropped: false, pid: s.pid, kind: "remote",
     });
     last = { note: t("lateSeated", esc(s.name)), seat };
@@ -4986,7 +4988,7 @@ SCREENS.GM_INTRO = () => {
    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;">
      <div class="banner gm">${G.inOmkamp ? t("omkamp") : t("roundN", G.round)}</div>
      <h1 style="color:var(--color-text-on-bg)">${ownScreen() && userIsGm() ? t("youAreGm") : t("gmIs", esc(gm.name))}</h1>
-     <p class="sub">${t("fearNose")}</p>
+     <p class="sub">${t("tagline")}</p>
      <div style="display:flex;justify-content:center;margin:16px 0;">
        ${face({ color: gm.color, size: 68, tone: "gm", brand: true, bob: true })}</div>
    </div>
@@ -5314,7 +5316,7 @@ function computeRound() {
   G.deltas = result.deltas;
   G.gmStole = result.gmStole;
   G.phase = "reveal";            // the truth may now travel (netProject, C9)
-  result.bluffVotes.forEach((n, i) => { G.players[i].bluffVotes += n; });
+  result.backing.forEach((n, i) => { G.players[i].backing += n; });
   if (G.doubles.length) setTimeout(() => play("doubleHit"), 400);   // surprise sparkle as the reveal opens
 }
 
@@ -5444,7 +5446,7 @@ SCREENS.BOARD = () => {
    <div style="margin-top:10px">
      ${G.players.map((p, i) => `<div class="scoreline">
         <span><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${p.color}"></span>
-        ${esc(p.name)} ${i === G.gm ? markCrown(11) : ""} <span class="small">${markRat(10)} ${p.bluffVotes}</span>
+        ${esc(p.name)} ${i === G.gm ? markCrown(11) : ""} <span class="small">${markRat(10)} ${p.backing}</span>
         ${G.deltas?.[i] ? `<b>+${G.deltas[i]}</b>` : ""}</span>
         <span id="sc${i}">${p.score} ${t("pts")}</span></div>`).join("")}
    </div>
@@ -5671,15 +5673,15 @@ SCREENS.OMKAMP = () => {
 /* ---------- winner ---------- */
 SCREENS.WINNER = () => {
   const winners = (G.winnersIdx ?? []).map((i) => G.players[i]);
-  const liar = [...G.players].sort((a, b) => b.bluffVotes - a.bluffVotes)[0];
+  const liar = [...G.players].sort((a, b) => b.backing - a.backing)[0];
   shell(`
    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;">
      <div style="display:flex;justify-content:center;margin-bottom:4px">${markRat(38)}</div>
      <h1>${G.shared ? t("shared") : t("winner", esc(winners[0]?.name ?? ""))}</h1>
      <p class="sub">${t("restOfYou")}</p>
      <div class="card gullnese-card" style="position:relative;display:flex;gap:12px;align-items:center;justify-content:center;">
-       ${face({ color: liar.color, size: 48, mood: "delighted", notch: liar.bluffVotes, grow: true, tone: "gold" })}
-       <b>${t("goldNose", esc(liar.name))} (${markRat(12)} ${liar.bluffVotes})</b>
+       ${face({ color: liar.color, size: 48, mood: "delighted", notch: liar.backing, grow: true, tone: "gold" })}
+       <b>${t("topBacking", esc(liar.name))} (${markRat(12)} ${liar.backing})</b>
        <span class="gullnese-fx" id="gullnesefx"></span></div>
      <div style="margin-top:14px">${[...G.players].sort((a, b) => b.score - a.score).map((p) => `
         <div class="scoreline"><span>${dot(p.color, p.name)} ${esc(p.name)}</span><span>${p.score} ${t("pts")}</span></div>`).join("")}</div>
@@ -6305,7 +6307,7 @@ function netApplyRatings(msg) {
   G.ratingMine = mine;
   const seat = mySeat();
   PROFILE = ratingApply(PROFILE, mine, {
-    nose: Math.min(G.players[seat]?.bluffVotes ?? 0, ratingNoseCap(G.players.length, G.round)),
+    nose: Math.min(G.players[seat]?.backing ?? 0, ratingBackingCap(G.players.length, G.round)),
     won: (G.winnersIdx ?? []).includes(seat),
   });
   ratingSave(PROFILE);
@@ -6338,7 +6340,7 @@ function settleRating() {
   G.ratingMine = mine;                 // shown on the winner screen
   const seat = mySeat();
   PROFILE = ratingApply(PROFILE, mine, {
-    nose: Math.min(G.players[seat]?.bluffVotes ?? 0, ratingNoseCap(G.players.length, G.round)),
+    nose: Math.min(G.players[seat]?.backing ?? 0, ratingBackingCap(G.players.length, G.round)),
     won: (G.winnersIdx ?? []).includes(seat),
   });
   ratingSave(PROFILE);
@@ -6363,7 +6365,7 @@ SCREENS.PROFILE = () => {
    <div class="card">
      <div class="scoreline"><span>${t("profileGames")}</span><span>${p.games}</span></div>
      <div class="scoreline"><span>${t("profileWins")}</span><span>${p.wins}</span></div>
-     <div class="scoreline"><span>${t("profileNose")}</span><span>👃 ${p.nose}</span></div>
+     <div class="scoreline"><span>${t("profileBacking")}</span><span>👃 ${p.nose}</span></div>
    </div>
    ${last.length ? `<div class="card"><b>${t("profileLast")}</b>
      <div class="chiprow" style="margin-top:8px">${last.map((h) => `

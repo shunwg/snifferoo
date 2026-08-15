@@ -129,7 +129,7 @@ export function ratingApply(profile, delta, { nose = 0, won = false } = {}) {
 
 // Career nose count has a ceiling per game: every other player can vote for you
 // at most once per round. Anything above that didn't happen.
-export const ratingNoseCap = (playerCount, rounds) =>
+export const ratingBackingCap = (playerCount, rounds) =>
   Math.max(0, (playerCount - 1) * Math.max(0, rounds));
 
 // -- storage ------------------------------------------------------------------

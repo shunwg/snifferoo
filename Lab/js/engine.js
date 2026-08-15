@@ -103,7 +103,7 @@ export function readyToOpenVote({ expected, bluffs, gmDecoyDone }) {
 // bluff-vote tally, and whether the GM stole the round.
 export function scoreRound({ playerCount, gm, options, votes, doubles = [] }) {
   const deltas = Array(playerCount).fill(0);
-  const bluffVotes = Array(playerCount).fill(0);
+  const backing = Array(playerCount).fill(0);
   for (const d of doubles) deltas[d] += 3; // dobbeltreff (+3, merged with truth)
 
   const votersByOption = new Map();
@@ -124,14 +124,14 @@ export function scoreRound({ playerCount, gm, options, votes, doubles = [] }) {
       const share = Math.ceil(voters.length / opt.authors.length);
       for (const a of opt.authors) {
         deltas[a] += share;
-        bluffVotes[a] += voters.length;
+        backing[a] += voters.length;
       }
     }
   }
 
   const gmStole = !truthFound;
   if (gmStole) deltas[gm] += 2; // "Spillmesteren vant runden!"
-  return { deltas, gmStole, bluffVotes };
+  return { deltas, gmStole, backing };
 }
 
 // -- game length & fairness (PRD §5.4) ----------------------------------------
@@ -165,7 +165,7 @@ export function omkampResolve({ scores, participants, deltas }) {
 export function createGame({ players, target, rng }) {
   return {
     phase: "card",
-    players: players.map((name) => ({ name, score: 0, bluffVotes: 0, dropped: false })),
+    players: players.map((name) => ({ name, score: 0, backing: 0, dropped: false })),
     target,
     round: 1,
     gm: 0,
@@ -282,7 +282,7 @@ export function dispatch(state, action) {
         options: state.options, votes: state.votes, doubles: state.doubles,
       });
       const players = state.players.map((p, i) => ({
-        ...p, score: p.score + result.deltas[i], bluffVotes: p.bluffVotes + result.bluffVotes[i],
+        ...p, score: p.score + result.deltas[i], backing: p.backing + result.backing[i],
       }));
       return { ...state, phase: "reveal", players, lastResult: result };
     }

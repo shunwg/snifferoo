@@ -58,7 +58,7 @@ test("game screens carry a startGame-shaped G; setup screens carry none", () => 
     for (const k of G_KEYS) assert.ok(k in g, `${f.id}: G missing key "${k}" (drifted from startGame?)`);
     assert.ok(g.players.length >= 3 && g.players.length <= 8, `${f.id}: player count`);
     for (const p of g.players) {
-      for (const k of ["name", "color", "score", "bluffVotes", "dropped", "pid", "kind"]) assert.ok(k in p, `${f.id}: player.${k}`);
+      for (const k of ["name", "color", "score", "backing", "dropped", "pid", "kind"]) assert.ok(k in p, `${f.id}: player.${k}`);
     }
     assert.ok(g.gm >= 0 && g.gm < g.players.length, `${f.id}: gm in range`);
     assert.ok(g.card?.prompt && g.card?.truth, `${f.id}: card`);

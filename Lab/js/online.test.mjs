@@ -14,7 +14,7 @@ import {
 } from "./clock.js";
 import {
   RATING, ratingDeltas, ratingExpected, ratingApply, ratingFresh, ratingLoad,
-  ratingSave, ratingReset, ratingNoseCap, ratingTier,
+  ratingSave, ratingReset, ratingBackingCap, ratingTier,
 } from "./rating.js";
 import {
   authRequired, authConfigured, authAuthorizeUrl, authParseCallback, authProfileFromUser,
@@ -33,7 +33,7 @@ const gameAt = (phase) => ({
   phase,
   gm: 0,
   round: 2,
-  players: [0, 1, 2, 3].map((i) => ({ name: `P${i}`, pid: `p${i}`, score: i, bluffVotes: 0, dropped: false, kind: "human" })),
+  players: [0, 1, 2, 3].map((i) => ({ name: `P${i}`, pid: `p${i}`, score: i, backing: 0, dropped: false, kind: "human" })),
   card: { prompt: "gane", truth: "DEN HEMMELIGE SANNHETEN" },
   decoys: ["gm sitt utkast", ""],
   bluffs: { 1: "løgn fra 1", 2: "løgn fra 2" },
@@ -413,9 +413,9 @@ test("history is bounded and best is a high-water mark", () => {
 });
 
 test("nose cap is the most anyone could honestly have collected", () => {
-  assert.equal(ratingNoseCap(4, 6), 18);   // 3 opponents x 6 rounds
-  assert.equal(ratingNoseCap(1, 6), 0);
-  assert.equal(ratingNoseCap(4, 0), 0);
+  assert.equal(ratingBackingCap(4, 6), 18);   // 3 opponents x 6 rounds
+  assert.equal(ratingBackingCap(1, 6), 0);
+  assert.equal(ratingBackingCap(4, 0), 0);
 });
 
 test("a corrupt or absent profile reseeds instead of throwing", () => {

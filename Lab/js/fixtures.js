@@ -24,7 +24,7 @@ function fxMakeG(overrides = {}) {
       name,
       color: AVA[i],
       score: [6, 8, 5, 3][i],
-      bluffVotes: [2, 4, 1, 5][i],
+      backing: [2, 4, 1, 5][i],
       dropped: false,
       pid: `fx:${i}`,          // fixtures are posed, never networked
       kind: "human",

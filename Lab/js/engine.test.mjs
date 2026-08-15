@@ -30,7 +30,7 @@ for (const v of vectors.rounds) {
     });
     assert.deepEqual(result.deltas, toArray(v.expected.deltas, n), "deltas");
     assert.equal(result.gmStole, v.expected.gmStole, "gmStole");
-    assert.deepEqual(result.bluffVotes, toArray(v.expected.bluffVotes, n), "bluffVotes");
+    assert.deepEqual(result.backing, toArray(v.expected.backing, n), "backing");
   });
 }
 
