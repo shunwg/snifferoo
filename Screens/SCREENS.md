@@ -1,4 +1,4 @@
-# Skjermregisteret — 01–23
+# Skjermregisteret — 01–24
 
 Alle visuelle referanser i dette prosjektet bruker **skjermnummer**. Si «endre 07», ikke «den lilla skjermen med kortet». Da vet alle fire nøyaktig hva som menes — i chat, i commits og i Claude-økter.
 
@@ -42,6 +42,7 @@ Skjermene er *poserte*: faste spillere (Åse, Markus, Ingrid, Jonas), faste poen
 | 21 | `JOIN` | Bli med | Kodefelt (fylles av delelenka), navn, kobler-til/feilet — og alltid en vei ut til robotspill | [21](png/21-join.png) |
 | 22 | `LOBBY_WAIT` | Venter på verten | Klientens lobby: romkode + hvem som er inne | [22](png/22-lobby_wait.png) |
 | 23 | `CONNLOST` | Mistet kontakten | 30 s nedtelling, prøv igjen, «fortsett på én telefon» | [23](png/23-connlost.png) |
+| 24 | `FRIENDS` | Spill med venner | Inngangen til «Spill med venner»: navn én gang, så «Lag rom» og «Bli med» side om side. Ligger foran 20 i flyten, men fikk 24 fordi numre er permanente | [24](png/24-friends.png) |
 
 **Filer:** alle skjermene tegnes av `Lab/js/ui.js` (`SCREENS.<ID>`); utseendet bor i `Lab/css/screens.css` + `components.css` (og `themes.css` for 14). Tekstene bor i `Lab/js/state.js` (`STR`, nb + en). Endrer du utseende: kjør `node --test Lab/js/fixtures.test.mjs`, sjekk galleriet, og `node Tools/snap-screens.mjs NN`.
 
@@ -61,6 +62,6 @@ Disse ligger *oppå* skjermene og refereres med navn:
 
 ## Kommer (får nummer når de finnes)
 
-Neste ledige nummer er **24**. Ennå ikke bygget: **Pause/Innstillinger** (PRD §8). Den som bygger dem: legg til fixture i `fixtures.js`, gi neste ledige nummer her, kjør snap.
+Neste ledige nummer er **25**. Ennå ikke bygget: **Pause/Innstillinger** (PRD §8). Den som bygger dem: legg til fixture i `fixtures.js`, gi neste ledige nummer her, kjør snap.
 
 *(19 gikk til Profilen din fordi den ble bygget først — numre tildeles i den rekkefølgen skjermene faktisk finnes, aldri etter plan.)*

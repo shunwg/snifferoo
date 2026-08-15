@@ -245,6 +245,15 @@ export const FIXTURES = [
   { id: "23", screen: "CONNLOST", name: "Mistet kontakten",
     // Mid-countdown rather than at 0: the state a player actually sees.
     make: () => ({ u: { fxRoom: "GKM47P", lostAt: 0, fxLostLeft: 18 }, g: null }) },
+
+  // Appended as 24 rather than slotted in front of 20 where it belongs in the
+  // flow: screen numbers are permanent handles ("endre 07"), so renumbering to
+  // keep them in running order would silently invalidate every existing
+  // reference in TEAM.md, SCREENS.md, commit messages and people's memory.
+  // Posed with a name already typed, because the empty state is just two
+  // disabled buttons and reviewing that tells you nothing.
+  { id: "24", screen: "FRIENDS", name: "Spill med venner",
+    make: () => ({ u: { uname: "Ingrid", joinCode: "" }, g: null }) },
 ];
 
 // A posed lobby roster. Åse hosts; the last seat is deliberately disconnected so

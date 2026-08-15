@@ -682,3 +682,37 @@ test("late join: timedOut reaches the client, so a seated latecomer is not shown
     assert.deepEqual(seen.timedOut, { bluff: [3], vote: [3] }, `${phase}: timedOut must survive projection`);
   }
 });
+
+/* "Spill med venner" must offer a way IN, not only a way to open a room.
+
+   The bug this pins down, reproduced in two browser windows on 2026-08-15: the
+   menu's friends door called netDoHost() unconditionally. Two friends both tap
+   the same button, both become the host of their own empty room — RFGV6Y and
+   W3T766 — and each sits watching "1 inne" waiting for the other, forever.
+   Nothing is broken underneath; the transport, the roster sync and the handover
+   all work. The mode simply had no entrance, only an exit.
+
+   Joining did exist, but only down two paths a first-time player never walks: a
+   share link the host has to think to send, and a de-emphasised text link at the
+   bottom of the lobby you reach only AFTER choosing wrong.
+
+   So the invariant is about reachability, not about hosting: whatever the friends
+   door opens must put creating and joining on the same screen, as peers. */
+test("the friends door offers joining, not only hosting", async () => {
+  const raw = await readFile(new URL("./ui.js", import.meta.url), "utf8");
+  const code = raw
+    .replace(/\/\*[\s\S]*?\*\//g, " ")
+    .split("\n").map((l) => l.replace(/\/\/.*$/, "")).join("\n");
+
+  const door = code.match(/dataset\.mode === "friends"\)\s*\{([^}]*)\}/)?.[1];
+  assert.ok(door, "the menu must still have a friends door");
+  assert.ok(
+    !/netDoHost\(\)/.test(door),
+    "the friends door must not host outright — that is the bug: both friends become hosts of separate rooms",
+  );
+
+  const screen = code.match(/SCREENS\.FRIENDS = \(\) => \{[\s\S]*?\n\};/)?.[0];
+  assert.ok(screen, "there must be a FRIENDS screen behind that door");
+  assert.match(screen, /netDoHost\(/, "…offering to create a room");
+  assert.match(screen, /netDoJoin\(/, "…and to join one, on the same screen");
+});

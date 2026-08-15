@@ -691,7 +691,11 @@ SCREENS.MODE = () => {
    <div style="flex:1"></div>`);
   app.querySelectorAll("[data-mode]").forEach((b) => b.onclick = () => {
     play("confirm");
-    if (b.dataset.mode === "friends") { netDoHost(); return; }  // a private room with a code
+    // NOT netDoHost() any more. This door used to host outright, which meant two
+    // friends tapping the same button each became the host of their own empty
+    // room and sat waiting for each other forever. FRIENDS asks which end of the
+    // code you are holding. See the invariant in online.test.mjs.
+    if (b.dataset.mode === "friends") { U.joinError = null; U.screen = "FRIENDS"; render(); return; }
     if (b.dataset.mode === "open") { netDoOpen(); return; }     // the one shared room
     U.mode = b.dataset.mode; U.screen = "PLAYERS"; render();
   });
@@ -2036,6 +2040,62 @@ SCREENS.LOBBY_WAIT = () => {
    <div style="flex:1;display:flex;align-items:center;justify-content:center;">
      ${face({ color: AVA[0], size: 60, brand: true, bob: true })}
    </div>`);
+};
+
+/* The front door for "Spill med venner" — one screen, both ends of the code.
+
+   It exists because the menu used to host outright. Two friends tapping the same
+   button each opened their own empty room and waited for the other; the mode had
+   no entrance. Creating and joining are the same size here on purpose: the
+   player who was sent a code is not a lesser case than the player who made one,
+   and burying "join" as a text link under the lobby is what hid it before.
+
+   The name is asked ONCE, here, and both doors carry it. netDoHost() never asked,
+   so a host reached their own lobby as "?" and everyone in the room saw a
+   question mark where the organiser should be. A party game where the roster
+   cannot name you looks broken before the first word is dealt, so a name is
+   required rather than defaulted — it is one field, and it is the whole point.
+
+   NO .card WRAPPERS, and that is not a style preference. The first draft grouped
+   each door in a .card, which measured at 1.00:1: .card paints
+   var(--color-surface) and .btn paints var(--color-action), and in this
+   monochrome palette both resolve to #16161A. The primary button vanished into
+   the panel behind it and only its label survived. Buttons live on the page
+   background in every other screen for exactly this reason; section <h2>s carry
+   the grouping instead, the way SETUP separates Spillengde from Brett. */
+SCREENS.FRIENDS = () => {
+  const name = (U.uname ?? PROFILE.name ?? "").trim();
+  const ready = name.length > 0 && !U.joining;
+  const code = (U.joinCode ?? "").trim();
+  shell(`
+   <h2>${t("friendsTitle")}</h2>
+   <label class="fieldlabel" for="fname">${t("joinName")}</label>
+   <input type="text" id="fname" maxlength="14" placeholder="${t("namePh")}"
+          value="${esc(U.uname ?? PROFILE.name ?? "")}" autocomplete="nickname">
+   ${U.joinError ? `<div class="banner" style="background:var(--color-timer-urgent)">${t(U.joinError)}</div>` : ""}
+
+   <h2>${t("friendsHostTitle")}</h2>
+   <p class="small" style="margin:-2px 0 10px">${t("friendsHostSub")}</p>
+   <button class="btn" id="dohost" ${ready ? "" : "disabled"}>${t("friendsHostGo")}</button>
+
+   <h2>${t("friendsJoinTitle")}</h2>
+   <p class="small" style="margin:-2px 0 10px">${t("friendsJoinSub")}</p>
+   <input type="text" id="fcode" maxlength="10" autocapitalize="characters" autocomplete="off"
+          placeholder="${t("joinCode")}" value="${esc(U.joinCode ?? "")}"
+          style="text-transform:uppercase;letter-spacing:4px;font-weight:700">
+   <button class="btn secondary" id="dojoin" ${ready && code.length >= 4 ? "" : "disabled"}>
+     ${U.joining ? t("joinConnecting") : t("joinGo")}</button>
+   <div style="flex:1"></div>`);
+
+  // Both fields re-render on input because two buttons watch them. Cheap: this
+  // screen holds no game state and nothing here is mid-animation.
+  const nm = document.getElementById("fname");
+  nm.oninput = () => { U.uname = nm.value; render(); nm.focus(); };
+  const cd = document.getElementById("fcode");
+  cd.oninput = () => { U.joinCode = cd.value.toUpperCase(); render(); cd.focus(); };
+
+  document.getElementById("dohost").onclick = () => netDoHost();
+  document.getElementById("dojoin").onclick = () => netDoJoin();
 };
 
 SCREENS.JOIN = () => {

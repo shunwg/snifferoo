@@ -10,6 +10,12 @@ const SCREEN_IDS = [
   "HOME", "LANG", "MODE", "PLAYERS", "PARTYSETUP", "SETUP", "GM_INTRO", "GM_DASH",
   "BLUFF", "WAIT", "VOTE", "VOTEWAIT", "REVEAL", "BOARD", "OMKAMP", "WINNER", "RULES", "ABOUT",
   "PROFILE", "HOST_LOBBY", "JOIN", "LOBBY_WAIT", "CONNLOST",
+  // 24. Appended, not inserted before HOST_LOBBY where the flow would put it:
+  // this array is POSITIONAL (index i must equal fixture id i+1), so slotting a
+  // screen into the middle renumbers every fixture after it — and screen numbers
+  // are the permanent handles the whole team points at. SCREENS.md states the
+  // same rule for the same reason.
+  "FRIENDS",
 ];
 const SCREEN_COUNT = SCREEN_IDS.length;   // numbers are permanent; new screens append
 // Keys of the G literal in ui.js startGame() — fxMakeG must mirror it.
