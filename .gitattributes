@@ -21,6 +21,12 @@
 # (core.autocrlf=true), the favicon data URI gains one byte per line, and every
 # Windows rebuild shows a phantom dist/ diff against a bundle built where LF won.
 *.svg text eol=lf
+# The web-app manifest is JSON by another extension, and .gitignore is read by
+# tooling on three platforms. Both warned on checkout that git was about to flip
+# them to CRLF, which is how a file starts producing a diff every time anyone
+# touches it on a different machine.
+*.webmanifest text eol=lf
+.gitignore text eol=lf
 # Binary assets
 *.png binary
 *.ogg binary

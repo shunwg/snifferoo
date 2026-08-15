@@ -40,9 +40,15 @@ export const NET_CONFIG = Object.freeze({
   // Namespaces us on the shared PUBLIC broker, so it has to be ours alone.
   // Changing this invalidates every share-link already in the wild: a room id is
   // PREFIX + code, and a guest on an old link asks the broker for a peer that no
-  // longer exists. Done once here, deliberately, at the rename (2026-07-28) and
-  // before the open room starts handing out links people keep.
-  PREFIX: "sn-",
+  // longer exists.
+  //
+  // Changed twice now, both times deliberately and both times while the cost was
+  // zero: "cm-" → "sn-" at the Snifferoo rename (2026-07-28), and "sn-" → "or-"
+  // at the Ordføreren rename (2026-08-16). The second was safe for a specific
+  // reason worth recording — GitHub Pages had never been enabled, so the game had
+  // no public URL and there was not a single share link in existence to break.
+  // Once the site is live this constant is effectively frozen.
+  PREFIX: "or-",
   CODE_LEN: 6,
   CODE_ALPHABET: "ABCDEFGHJKLMNPQRSTUVWXYZ23456789",  // no 0/O/1/I — read aloud
   CONNECT_TIMEOUT_MS: 8000,

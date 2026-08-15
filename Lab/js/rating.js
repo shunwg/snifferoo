@@ -29,13 +29,23 @@ export const RATING = Object.freeze({
   PROVISIONAL_GAMES: 10,
   SETTLED_GAMES: 30,
   KEY: "ordforeren.profile.v1",
-  // The pre-rename key. Anyone who played before 2026-07-28 has their rating,
-  // career nose and game count under this name, and a rename that silently
-  // reset them would be the app quietly throwing away the only thing it ever
-  // asked to keep. Read-only and one-way: ratingLoad adopts it, ratingSave
-  // never writes it, and ratingReset clears it so "delete my profile" still
-  // means delete.
-  LEGACY_KEY: "cockymonk.profile.v1",
+  /* Every key this game has ever stored a profile under, NEWEST FIRST.
+     Read-only and one-way: ratingLoad adopts the first one that exists,
+     ratingSave never writes them, ratingReset clears all of them so "slett
+     profilen" still means delete.
+
+     This is an ARRAY because the game has now been renamed twice, and the second
+     rename nearly ate everyone's rating. Cocky Monk → Snifferoo added a single
+     LEGACY_KEY, which was correct at the time. Snifferoo → Ordføreren was done
+     with a bulk find-and-replace that rewrote KEY and left LEGACY_KEY pointing at
+     cockymonk, orphaning every profile earned in between — silently, because a
+     missing profile is indistinguishable from a new player. A list cannot fail
+     that way: the next rename prepends one line.
+
+     Newest first matters. A player who has both a snifferoo and a cockymonk
+     profile should get the snifferoo one; iterating oldest-first would hand them
+     a stale rating and quietly discard the newer history. */
+  LEGACY_KEYS: ["snifferoo.profile.v1", "cockymonk.profile.v1"],
   VERSION: 1,
   HISTORY_MAX: 20,
 });
@@ -153,7 +163,10 @@ export function ratingLoad() {
   // direction, and only when the new key is genuinely absent — a player who has
   // since reset their profile must not have the old one resurrected on top.
   if (!raw) {
-    try { raw = globalThis.localStorage?.getItem(RATING.LEGACY_KEY) ?? null; } catch { /* blocked */ }
+    for (const k of RATING.LEGACY_KEYS) {
+      try { raw = globalThis.localStorage?.getItem(k) ?? null; } catch { /* blocked */ }
+      if (raw) break;                      // newest surviving profile wins
+    }
   }
   if (!raw) return ratingFresh();
   try {
@@ -175,10 +188,13 @@ export function ratingSave(profile) {
 
 export function ratingReset(name = "") {
   try { globalThis.localStorage?.removeItem(RATING.KEY); } catch { /* nothing to undo */ }
-  // Clear the legacy key too, or "slett profilen" leaves a copy behind that
+  // Clear EVERY legacy key too, or "slett profilen" leaves a copy behind that
   // ratingLoad would happily adopt on the next visit. The profile screen
-  // promises the data is gone; it has to actually be gone.
-  try { globalThis.localStorage?.removeItem(RATING.LEGACY_KEY); } catch { /* nothing to undo */ }
+  // promises the data is gone; it has to actually be gone — and with two
+  // renames behind us, missing one of them is now a live possibility.
+  for (const k of RATING.LEGACY_KEYS) {
+    try { globalThis.localStorage?.removeItem(k); } catch { /* nothing to undo */ }
+  }
   const fresh = ratingFresh(name);
   ratingSave(fresh);
   return fresh;
