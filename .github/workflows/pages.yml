@@ -1,4 +1,4 @@
-# Deploys the playable standalone to https://shunwg.github.io/snifferoo/
+# Deploys the playable standalone to https://shunwg.github.io/ordforeren/
 #
 # THIS FILE MUST LIVE AT THE REPOSITORY ROOT.
 # GitHub only reads workflows from <repo-root>/.github/workflows/ — it does NOT
@@ -61,16 +61,16 @@ jobs:
       # notice is whoever you sent the link to.
       - name: Verify the bundle is real
         run: |
-          test -s dist/Snifferoo.html
-          bytes=$(wc -c < dist/Snifferoo.html)
+          test -s dist/Ordforeren.html
+          bytes=$(wc -c < dist/Ordforeren.html)
           echo "bundle: $bytes bytes"
           test "$bytes" -gt 400000
-          grep -q "<title>Snifferoo</title>" dist/Snifferoo.html
+          grep -q "<title>Ordføreren</title>" dist/Ordforeren.html
 
       - name: Stage site
         run: |
           mkdir site
-          cp dist/Snifferoo.html site/index.html
+          cp dist/Ordforeren.html site/index.html
 
       - uses: actions/upload-pages-artifact@v3
         with:

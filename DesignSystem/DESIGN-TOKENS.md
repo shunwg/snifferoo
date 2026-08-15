@@ -1,6 +1,6 @@
 <!-- GENERATED from DesignSystem/tokens.json — do not edit (run: node Tools/tokens-build.mjs) -->
 
-# Snifferoo design tokens
+# Ordføreren design tokens
 
 Source of truth: `DesignSystem/tokens.json` (v1) — DESIGN.md v3 + frozen demo (Reference/cocky-monk-demo.html — demo wins on conflict).
 Generated outputs: `Lab/css/tokens.css` · `DesignSystem/DESIGN-TOKENS.md`.

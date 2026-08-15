@@ -124,9 +124,9 @@ test("room codes avoid characters people mishear", () => {
 });
 
 test("share links round-trip, and file:// honestly has none", () => {
-  const loc = { protocol: "https:", origin: "https://example.test", pathname: "/snifferoo/", search: "" };
+  const loc = { protocol: "https:", origin: "https://example.test", pathname: "/ordforeren/", search: "" };
   const link = netShareLink("ABC234", loc);
-  assert.equal(link, "https://example.test/snifferoo/?room=ABC234");
+  assert.equal(link, "https://example.test/ordforeren/?room=ABC234");
   assert.equal(netRoomFromUrl({ search: "?room=abc234" }), "ABC234", "case-insensitive, normalised");
   assert.equal(netRoomFromUrl({ search: "" }), null);
   assert.equal(netRoomFromUrl({ search: "?room=<script>" }), null, "rejects junk");
@@ -442,7 +442,7 @@ test("a corrupt or absent profile reseeds instead of throwing", () => {
   } finally { globalThis.localStorage = orig; }
 });
 
-// The rename from Snifferoo to Snifferoo moved the storage key. A player who
+// The rename from Ordføreren to Ordføreren moved the storage key. A player who
 // had a rating, a career nose and 40 games behind them must not open the app to
 // a blank slate — that is the app throwing away the only thing it ever asked to
 // keep, and it would look exactly like a bug nobody could reproduce.
@@ -731,7 +731,7 @@ test("auth policy: online modes need a session, one phone and offline do not", (
   assert.equal(authRequired("friends"), true);
   assert.equal(authRequired("open"), true);
 
-  // The load-bearing half. dist/Snifferoo.html is documented as working offline
+  // The load-bearing half. dist/Ordforeren.html is documented as working offline
   // from a double-click, and hotseat is one phone going round a table with no
   // second device to identify. A wall in front of either ships a game that
   // cannot be opened on a plane, and a "required login" reading that breaks the
@@ -751,7 +751,7 @@ test("auth: nothing is demanded while no provider is configured", () => {
 
 test("auth: the authorize url carries the WHOLE current page back", () => {
   const cfg = { URL: "https://abc.supabase.co/", ANON_KEY: "k", PROVIDERS: ["google", "apple"] };
-  const u = new URL(authAuthorizeUrl("google", { cfg, redirect: "https://shunwg.github.io/snifferoo/?room=P3AZQJ" }));
+  const u = new URL(authAuthorizeUrl("google", { cfg, redirect: "https://shunwg.github.io/ordforeren/?room=P3AZQJ" }));
 
   assert.equal(u.origin + u.pathname, "https://abc.supabase.co/auth/v1/authorize", "trailing slash on URL must not double up");
   assert.equal(u.searchParams.get("provider"), "google");
@@ -759,7 +759,7 @@ test("auth: the authorize url carries the WHOLE current page back", () => {
   // The point of the whole parameter: a guest who followed a share link and was
   // bounced through Google must land back IN THE ROOM, not on the home screen
   // holding no code. Losing ?room= here turns an invitation into a dead end.
-  assert.equal(u.searchParams.get("redirect_to"), "https://shunwg.github.io/snifferoo/?room=P3AZQJ");
+  assert.equal(u.searchParams.get("redirect_to"), "https://shunwg.github.io/ordforeren/?room=P3AZQJ");
 
   assert.equal(authAuthorizeUrl("facebook", { cfg }), null, "only configured providers");
 });

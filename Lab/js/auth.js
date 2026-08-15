@@ -35,7 +35,7 @@ export const AUTH_CONFIG = Object.freeze({
   URL: "",                // e.g. https://abcdefgh.supabase.co
   ANON_KEY: "",
   PROVIDERS: ["google", "apple"],
-  STORE_KEY: "snifferoo.session.v1",
+  STORE_KEY: "ordforeren.session.v1",
 });
 
 /* Is a real provider wired up? Until Shun completes AUTH-SETUP.md this is false
@@ -51,8 +51,8 @@ export const authConfigured = (cfg = AUTH_CONFIG) =>
  *
  * ONLINE ONLY, and that is a deliberate reading of "required login". A login
  * wall at app start would brick two things the project promises in writing:
- * dist/Snifferoo.html, which is documented as "no Node, no server, works
- * offline" and is what `Play Snifferoo.cmd` opens, and "Én telefon", which is
+ * dist/Ordforeren.html, which is documented as "no Node, no server, works
+ * offline" and is what `Play Ordforeren.cmd` opens, and "Én telefon", which is
  * one phone passed around a table where there is no second device to identify
  * and frequently no network at all.
  *

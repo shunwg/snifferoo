@@ -28,7 +28,7 @@ export const RATING = Object.freeze({
   K_SET: 16,           // settled
   PROVISIONAL_GAMES: 10,
   SETTLED_GAMES: 30,
-  KEY: "snifferoo.profile.v1",
+  KEY: "ordforeren.profile.v1",
   // The pre-rename key. Anyone who played before 2026-07-28 has their rating,
   // career nose and game count under this name, and a rename that silently
   // reset them would be the app quietly throwing away the only thing it ever

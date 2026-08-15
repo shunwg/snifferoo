@@ -9,7 +9,7 @@ Everything below has to be done by a human in three web consoles. None of it can
 here: it needs accounts, and two of the three ask for a card.
 
 **Do Pages first.** Google and Apple both refuse to register a redirect against an origin that
-returns 404, so `https://shunwg.github.io/snifferoo/` has to be live before step 2.
+returns 404, so `https://shunwg.github.io/ordforeren/` has to be live before step 2.
 Repo → Settings → Pages → Source → **GitHub Actions**, then re-run the failed deploy.
 
 ---
@@ -17,7 +17,7 @@ Repo → Settings → Pages → Source → **GitHub Actions**, then re-run the f
 ## 1. Supabase — the backend that holds the profile (free, ~5 min)
 
 1. [supabase.com](https://supabase.com) → sign in with GitHub → **New project**.
-   Name `snifferoo`, region **West EU (Ireland)** — closest to Norwegian players, and keeps the data
+   Name `ordforeren`, region **West EU (Ireland)** — closest to Norwegian players, and keeps the data
    in the EEA, which is the answer you want when someone asks where the profiles live.
 2. Wait for provisioning, then **Project Settings → API** and copy two values:
    - **Project URL** → `https://<something>.supabase.co`
@@ -33,13 +33,13 @@ Repo → Settings → Pages → Source → **GitHub Actions**, then re-run the f
    the exact opposite: it bypasses RLS entirely. It must never be pasted anywhere in this repo, and
    if it ever is, rotate it in the dashboard rather than just deleting the line.
 4. **Authentication → URL Configuration**:
-   - Site URL: `https://shunwg.github.io/snifferoo/`
+   - Site URL: `https://shunwg.github.io/ordforeren/`
    - Additional redirect URLs: `http://localhost:8787/Lab/` (so the Lab works while developing)
 
 ## 2. Google — free, ~10 min
 
-1. [console.cloud.google.com](https://console.cloud.google.com) → new project `snifferoo`.
-2. **APIs & Services → OAuth consent screen** → External → app name `Snifferoo`, your support email,
+1. [console.cloud.google.com](https://console.cloud.google.com) → new project `ordforeren`.
+2. **APIs & Services → OAuth consent screen** → External → app name `Ordføreren`, your support email,
    and a developer email. Scopes: leave the defaults (`email`, `profile`, `openid`) — the app reads
    nothing else, and asking for more is how a consent screen starts frightening people.
    While it is in **Testing** only accounts you list can sign in; hit **Publish** when you want the
@@ -59,7 +59,7 @@ Only worth doing when you actually want it; Google alone works on iPhones too, i
    There is no free tier for Sign in with Apple on the web.
 2. **Certificates, IDs & Profiles → Identifiers**:
    - An **App ID** with *Sign In with Apple* enabled.
-   - A **Services ID** (e.g. `no.snifferoo.web`) — this is what the web flow uses.
+   - A **Services ID** (e.g. `no.ordforeren.web`) — this is what the web flow uses.
      Configure it: domain `shunwg.github.io`, return URL
      `https://<something>.supabase.co/auth/v1/callback`.
 3. **Keys → new key** with *Sign In with Apple* enabled. Download the `.p8` **once** — Apple never
@@ -89,8 +89,8 @@ home screen holding no code. There is a test for that too, but it is worth seein
 ## What stays true afterwards
 
 - **Én telefon and the offline bundle need no account.** `authRequired()` covers the networked modes
-  only. `dist/Snifferoo.html` still works from a double-click with no network, which is what
-  `Play Snifferoo.cmd` opens and what the README promises.
+  only. `dist/Ordforeren.html` still works from a double-click with no network, which is what
+  `Play Ordforeren.cmd` opens and what the README promises.
 - **The game itself never touches the backend.** Cards, lies and votes still go peer-to-peer; the
   broker and Supabase both stay ignorant of them. Supabase holds an identity and a rating, nothing
   about a round.

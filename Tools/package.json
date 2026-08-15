@@ -1,7 +1,7 @@
 {
-  "name": "snifferoo-tools",
+  "name": "ordforeren-tools",
   "private": true,
-  "description": "Zero-dependency Node toolchain for the Snifferoo studio system (validate, build tokens, serve the Lab).",
+  "description": "Zero-dependency Node toolchain for the Ordføreren studio system (validate, build tokens, serve the Lab).",
   "type": "module",
   "engines": { "node": ">=18" }
 }

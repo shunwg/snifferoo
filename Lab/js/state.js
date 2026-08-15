@@ -3,7 +3,7 @@
 
 export const STR = {
   nb: {
-    title: "Snifferoo", demo: "lab", pickLang: "Velg språk",
+    title: "Ordføreren", demo: "lab", pickLang: "Velg språk",
     mode: "Hvordan vil du spille?", hotseatName: "Én telefon", hotseatSub: "Én telefon går rundt bordet.",
     partyName: "Hver sin telefon", partySub: "Motspillerne er roboter. Du starter som spillmester.",
     players: "Hvem spiller?", addPlayer: "+ Legg til spiller", namePh: "Navn…", needPlayers: "3–8 spillere",
@@ -55,7 +55,7 @@ export const STR = {
     rulesScore3: "Ingen fant sannheten",
     rulesScore4: "Du skrev nesten sannheten",
     rulesBack: "Tilbake",
-    aboutTitle: "Om Snifferoo",
+    aboutTitle: "Om Ordføreren",
     aboutBlurb: "Et selskapsspill om å lyve med stil. Moroa lager dere selv. Appen holder styr på poengene.",
     aboutCredits: "Skrifter og lyder: Fredoka (OFL), lottie-web (MIT), Kenney (CC0).",
     // Honest, not reassuring: the moment a profile is persisted, "vi lagrer
@@ -137,7 +137,12 @@ export const STR = {
     setupForRoom: "Du er vert. Dette gjelder hele rommet.",
   },
   en: {
-    title: "Snifferoo", demo: "lab", pickLang: "Choose language",
+    // NOT a translation of "Ordføreren" — a sibling pun with the same structure.
+    // Ordfører decomposes to ord + fører, "word-leader", and is everyday Norwegian
+    // for a mayor. "Speaker" carries the identical double meaning in English: one
+    // who speaks, and the elected chair who governs who may speak. "The Mayor"
+    // would be the literal answer and would throw the joke away.
+    title: "The Speaker", demo: "lab", pickLang: "Choose language",
     mode: "How do you want to play?", hotseatName: "One phone", hotseatSub: "One phone goes round the table.",
     partyName: "A phone each", partySub: "Your opponents are bots. You start as game master.",
     players: "Who's playing?", addPlayer: "+ Add player", namePh: "Name…", needPlayers: "3–8 players",
@@ -189,7 +194,7 @@ export const STR = {
     rulesScore3: "Nobody found the truth",
     rulesScore4: "Double hit: you nearly wrote the truth",
     rulesBack: "Back",
-    aboutTitle: "About Snifferoo",
+    aboutTitle: "About Ordføreren",
     aboutBlurb: "A party game about lying with style. You make the fun yourselves. The app just keeps score.",
     aboutCredits: "Fonts and audio: Fredoka (OFL), lottie-web (MIT), Kenney (CC0).",
     // Honest, not reassuring — see the nb note above.

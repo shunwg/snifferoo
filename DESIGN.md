@@ -1,4 +1,4 @@
-# DESIGN.md v3 — Snifferoo design system
+# DESIGN.md v3 — Ordføreren design system
 
 **Subject:** a living-room quiz-show where one player runs the stage and everyone else lies for points, progress told by pawns on a board.
 **Job:** legible across a table, delicious to lie in, and a board that makes every point *felt*.

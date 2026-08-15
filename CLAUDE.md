@@ -1,4 +1,4 @@
-# CLAUDE.md — Snifferoo project constitution
+# CLAUDE.md — Ordføreren project constitution
 
 A Norwegian bluffing party game. **PRD.md is the spec, DESIGN.md is the look,
 `Reference/cocky-monk-demo.html` is the canonical prototype, and this file is the law.** When they
@@ -6,7 +6,7 @@ conflict: PRD > DESIGN > this file. If something is unspecified, propose in plan
 silently.
 
 **What exists today:** the browser build in `Lab/` is the live product, deployed to
-https://shunwg.github.io/snifferoo/. **The iOS app is a spec, not a codebase** — the empty
+https://shunwg.github.io/ordforeren/. **The iOS app is a spec, not a codebase** — the empty
 `Sources/`, `Tests/`, `scripts/` and `project.yml` scaffolding was removed on 2026-07-28 because
 nothing had ever been built against it. The plan survives in PRD.md and `MAC_RUNBOOK.md`, and the
 files are one `git checkout` away in history.
@@ -105,7 +105,7 @@ green before merge.** Matrix and contracts in `LANES.md` (English); the human ma
   approved exception (see below) and a signed-in player's name, picture and rating live on a server.
   What did not change, and may not:
   - **Én telefon and the offline bundle need no account and no network.** `authRequired()` in
-    `auth.js` covers the networked modes only. `dist/Snifferoo.html` must keep working from a
+    `auth.js` covers the networked modes only. `dist/Ordforeren.html` must keep working from a
     double-click on a plane. A login wall at app start breaks the README's own promise.
   - **The game never reaches the backend.** Cards, lies and votes stay peer-to-peer. Supabase holds
     an identity and a rating; it learns nothing about a round.

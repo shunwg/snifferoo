@@ -4,7 +4,7 @@ Ny i mappa? Tre dører inn:
 
 | Vil du … | Gjør |
 |---|---|
-| **Spille spillet** | dobbeltklikk `Play Snifferoo.cmd` |
+| **Spille spillet** | dobbeltklikk `Play Ordforeren.cmd` |
 | **Se alle skjermene (01–23)** | dobbeltklikk `Open Screen Gallery.cmd` |
 | **Jobbe på spillet** | les videre — 5 minutter — og finn segmentet ditt |
 
@@ -55,7 +55,7 @@ Alle 23 skjermer har permanent nummer. «Nesen overlapper navnet på 13» er en 
 alle (og Claude) vet nøyaktig hvor det er.
 
 - **Se alt:** `node Tools/serve-lab.mjs` → <http://localhost:8787/Lab/gallery.html> (eller dobbeltklikk `Open Screen Gallery.cmd`)
-- **Én skjerm:** `…/Lab/index.html?fixture=07` — også `dist/Snifferoo.html?fixture=07` rett fra disk
+- **Én skjerm:** `…/Lab/index.html?fixture=07` — også `dist/Ordforeren.html?fixture=07` rett fra disk
 - **Stillbilder:** `Screens/png/` — regenerer med `node Tools/snap-screens.mjs` etter UI-endringer
 
 ## Sånn jobber vi (protokollen for generalister)
@@ -80,16 +80,16 @@ Grener, pull requests og konflikthåndtering står i `README.md`.
 
 | Vil du … | Gjør |
 |---|---|
-| Spille lokalt | Dobbeltklikk `Play Snifferoo.cmd` (eller `dist/Snifferoo.html`) |
+| Spille lokalt | Dobbeltklikk `Play Ordforeren.cmd` (eller `dist/Ordforeren.html`) |
 | Se alle skjermene | `Open Screen Gallery.cmd` |
-| Spille med andre over nett | Åpne <https://shunwg.github.io/snifferoo/> og del rom-lenka |
+| Spille med andre over nett | Åpne <https://shunwg.github.io/ordforeren/> og del rom-lenka |
 | Utvikle med live-reload | `node Tools/serve-lab.mjs` → <http://localhost:8787/Lab/> |
 | Bygge én-fils-versjonen på nytt | `node Tools/build-standalone.mjs` (etter hver Lab-endring — `dist/` er sjekket inn) |
 | Kjøre ALT | `/qa` i Claude Code |
 
 ## Kom i gang som lagmedlem (engangs)
 
-1. Klon repoet: `git clone https://github.com/shunwg/snifferoo.git` — spillet ligger i rota.
+1. Klon repoet: `git clone https://github.com/shunwg/ordforeren.git` — spillet ligger i rota.
 2. Installer [Node ≥ 18](https://nodejs.org) — **eneste** verktøykrav på Windows.
 3. Åpne Claude Code i repo-mappa — skills (`/director`, `/qa`, `/newcards`, kort-forfatteren, panelet) følger med repoet i `.claude/`.
 4. Kjør alle portene én gang så du vet hvordan grønt ser ut (`/qa`). Les så `Screens/SCREENS.md` (5 min) og ditt favorittsegments filer.
