@@ -71,8 +71,8 @@
 .board .space.goal::before {
   content: ""; position: absolute; inset: 0;
   background: var(--color-text-on-surface); opacity: .16;
-  -webkit-mask: var(--mark-cheese) center / 62% no-repeat;
-          mask: var(--mark-cheese) center / 62% no-repeat;
+  -webkit-mask: var(--mark-gavel) center / 62% no-repeat;
+          mask: var(--mark-gavel) center / 62% no-repeat;
 }
 @keyframes goalglow {
   0%, 100% { box-shadow: 0 0 0 0 #FFFFFF00, inset 0 0 0 2px #FFFFFF55; }
@@ -103,8 +103,8 @@
   content: ""; position: absolute; top: -15px; width: 20px; height: 12px;
   color: var(--color-text-on-bg);
   background: currentColor;
-  -webkit-mask: var(--mark-rat) center / contain no-repeat;
-          mask: var(--mark-rat) center / contain no-repeat;
+  -webkit-mask: var(--mark-rosette) center / contain no-repeat;
+          mask: var(--mark-rosette) center / contain no-repeat;
   animation: crownDrop var(--spring-reveal-pop-duration) var(--spring-reveal-pop-ease) both;
 }
 @keyframes crownDrop { 0% { transform: translateY(-6px) scale(.6); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
@@ -159,7 +159,7 @@
 }
 .step-b b { display: block; font-size: 16px; margin-bottom: 2px; color: var(--color-text-on-bg); }
 .step-b small { color: var(--color-text-secondary); font-size: 14px; line-height: 1.4; }
-.nose-demo { display: flex; align-items: center; justify-content: center; gap: 30px; margin: 18px 0 8px; }
+.badge-demo { display: flex; align-items: center; justify-content: center; gap: 30px; margin: 18px 0 8px; }
 .scorerow { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1.5px dashed #00000018; }
 .scorerow:last-child { border-bottom: none; }
 .pt {

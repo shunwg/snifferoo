@@ -393,11 +393,11 @@ test("no delta ever exceeds MAX_DELTA, however lopsided", () => {
 
 test("ratingApply clamps a hostile delta and never drops below the floor", () => {
   const p = ratingFresh("Åse");
-  const cheated = ratingApply(p, 99999, { nose: 3, won: true });
+  const cheated = ratingApply(p, 99999, { backing: 3, won: true });
   assert.equal(cheated.rating, RATING.START + RATING.MAX_DELTA, "clamped on receipt");
   assert.equal(cheated.games, 1);
   assert.equal(cheated.wins, 1);
-  assert.equal(cheated.nose, 3);
+  assert.equal(cheated.backing, 3);
   let low = { ...ratingFresh(), rating: RATING.FLOOR + 5 };
   low = ratingApply(low, -500);
   assert.equal(low.rating, RATING.FLOOR, "floored, not negative");
@@ -412,7 +412,7 @@ test("history is bounded and best is a high-water mark", () => {
   assert.equal(p.best, peak, "best does not fall back");
 });
 
-test("nose cap is the most anyone could honestly have collected", () => {
+test("the backing cap is the most anyone could honestly have collected", () => {
   assert.equal(ratingBackingCap(4, 6), 18);   // 3 opponents x 6 rounds
   assert.equal(ratingBackingCap(1, 6), 0);
   assert.equal(ratingBackingCap(4, 0), 0);

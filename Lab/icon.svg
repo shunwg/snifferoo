@@ -1,44 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Ordføreren">
   <title>Ordføreren</title>
-  <!-- The Munken, same drawing as LOGO() in Lab/js/ui.js and .face in
-       components.css: bevelled cream head, flat brows, dot eyes, tilted smirk,
-       and the Nose lying across the face and jutting past the rim. Literal hexes
-       rather than tokens — an app icon is rendered by the OS, outside any
-       stylesheet, and must look identical on every theme.
-       Composed on a 512 square with the head off-centre left so the Nose has
-       room to jut right without touching the edge. -->
-  <defs>
-    <!-- The glows below are big circles that hang past the corner radius. Without
-         this clip they render as hard shoulders OUTSIDE the rounded rect, which on
-         a home screen reads as a broken icon rather than a soft wash. -->
-    <clipPath id="squircle"><rect width="512" height="512" rx="112"/></clipPath>
-  </defs>
-  <g clip-path="url(#squircle)">
-    <rect width="512" height="512" fill="#1B1B2E"/>
-    <!-- soft corner glows, matching the app background's two radial washes -->
-    <circle cx="470" cy="52" r="150" fill="#9B6DFF" opacity=".20"/>
-    <circle cx="40" cy="470" r="140" fill="#FF5C97" opacity=".16"/>
-  </g>
+  <!-- The rosette, the same drawing as LOGO() in Lab/js/ui.js and the
+       --mark-rosette mask in base.css. Literal hexes rather than tokens: an app
+       icon is rendered by the OS, outside any stylesheet, and must look identical
+       on every theme.
 
-  <g transform="translate(256 256) scale(6.1) translate(-24 -19)">
-    <!-- hard offset shadow, drawn once under both head and nose -->
-    <g fill="#141425">
-      <circle cx="22.8" cy="21.3" r="16"/>
-      <rect x="22" y="20.2" width="30" height="7.7" rx="3.85"/>
-    </g>
-    <!-- head: bevel ring, then the paper face, then the ink outline -->
-    <circle cx="24" cy="19.5" r="16" fill="#E8D5AE"/>
-    <circle cx="25.4" cy="18.1" r="14.3" fill="#FFF6E8"/>
-    <circle cx="24" cy="19.5" r="16" fill="none" stroke="#23233B" stroke-width="2.8"/>
-    <!-- brows + smirk -->
-    <g stroke="#23233B" stroke-linecap="round" fill="none">
-      <path d="M15 10 19.2 10.6" stroke-width="2"/>
-      <path d="M31.4 10 27.2 10.6" stroke-width="2"/>
-      <path d="M19 27.2q3.2 3.4 6.6-.6" stroke-width="2.5"/>
-    </g>
-    <circle cx="17.3" cy="14.9" r="1.7" fill="#23233B"/>
-    <circle cx="29.1" cy="14.9" r="1.7" fill="#23233B"/>
-    <!-- the Nose: the boldness budget, spent (DESIGN §4) -->
-    <rect x="23.2" y="18.4" width="30" height="5.2" rx="2.6" fill="#FF5C97" stroke="#23233B" stroke-width="2.5"/>
+       THIS FILE WAS TWO REDESIGNS STALE. It still carried the original monk face
+       — bevelled cream head, dot eyes, and a #FF5C97 nose — long after the app
+       went monochrome and long after the rat replaced the monk. Nothing caught
+       it, because no gate renders the icon and nobody installs the PWA during
+       development. If the mark changes again, this file changes with it.
+
+       Dark plane rather than the app's light one, deliberately: a home screen is
+       somebody else's wallpaper, and a near-black squircle holds its edge against
+       any of them. The light page look belongs inside the app, where we own the
+       whole rectangle. -->
+  <rect width="512" height="512" rx="112" fill="#16161A"/>
+  <g transform="translate(256 256) scale(3.55) translate(-50 -52)" fill="#F6F6F4">
+    <path d="M40 60 L26 96 L37 91 L45 99 L53 63 Z M60 60 L74 96 L63 91 L55 99 L47 63 Z"/>
+    <path d="M50 12A7.25 7.25 0 0 1 64 15.8A7.25 7.25 0 0 1 74.2 26A7.25 7.25 0 0 1 78 40A7.25 7.25 0 0 1 74.2 54A7.25 7.25 0 0 1 64 64.2A7.25 7.25 0 0 1 50 68A7.25 7.25 0 0 1 36 64.2A7.25 7.25 0 0 1 25.8 54A7.25 7.25 0 0 1 22 40A7.25 7.25 0 0 1 25.8 26A7.25 7.25 0 0 1 36 15.8A7.25 7.25 0 0 1 50 12Z M50 29.5a10.5 10.5 0 1 0 0 21 10.5 10.5 0 0 0 0-21Z"/>
   </g>
 </svg>

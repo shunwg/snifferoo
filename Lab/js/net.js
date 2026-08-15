@@ -265,7 +265,7 @@ export function netHost({ pid, name, profile, onMessage, onPeerChange, onReady, 
       clearTimeout(timeout);
       Object.assign(NET, {
         kind: "peer-host", isHost: true, roomCode: code, myPid: pid, error: null,
-        peers: [{ pid, name, rating: profile?.rating, games: profile?.games, nose: profile?.nose, connected: true }],
+        peers: [{ pid, name, rating: profile?.rating, games: profile?.games, backing: profile?.backing, connected: true }],
       });
       onReady?.(code);
       onPeerChange?.(NET.peers);
@@ -295,7 +295,7 @@ export function netHost({ pid, name, profile, onMessage, onPeerChange, onReady, 
           else if (NET.peers.length < NET_CONFIG.MAX_PLAYERS) {
             NET.peers.push({
               pid: msg.pid, name: msg.name, rating: msg.rating,
-              games: msg.games, nose: msg.nose, connected: true,
+              games: msg.games, backing: msg.backing, connected: true,
             });
           } else { ntSafeSend(conn, { t: "bye", reason: "full" }); return; }
           onPeerChange?.(NET.peers);
@@ -408,7 +408,7 @@ export function netJoin({ code, pid, name, profile, onMessage, onPeerChange, onR
       // The same pid every time, so a reconnect lands back in our own seat.
       ntSafeSend(conn, {
         t: "hello", pid, name,
-        rating: profile?.rating, games: profile?.games, nose: profile?.nose,
+        rating: profile?.rating, games: profile?.games, backing: profile?.backing,
       });
       onReady?.(code.toUpperCase());
     });

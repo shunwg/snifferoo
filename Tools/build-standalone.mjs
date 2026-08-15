@@ -47,7 +47,7 @@ function stripModule(src) {
     .replace(/^(\s*)export\s+(async\s+)?(const|let|var|function|class)\b/gm, "$1$2$3")
     .replace(/^\s*export\s*\{[^}]*\}\s*;?[ \t]*$/gm, "");               // export { … };
 }
-const LOTTIE = ["confetti_win", "gullnese_shimmer", "gm_steal_sting",
+const LOTTIE = ["confetti_win", "rosette_shimmer", "gm_steal_sting",
                 "celebration_salongen", "celebration_fjellet", "celebration_verdensrommet"];
 
 // Ceiling for the self-contained build. ~650 KB with PeerJS + Fredoka inlined.
@@ -99,8 +99,8 @@ async function main() {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#1B1B2E">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#FFFFFF">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Ordføreren">
@@ -118,7 +118,7 @@ ${css}
 <body>
 <div id="app"></div>
 <script>/* full decks (${cardCount} cards), fakes, and 6 Lottie celebrations — no network needed */
-window.__COCKY__ = ${scriptSafe(bundle)};</script>
+window.__ORD__ = ${scriptSafe(bundle)};</script>
 <script>/* lottie-web 5.12.2 — MIT (see ASSETS.md) */
 ${lottieLib}
 </script>
@@ -163,7 +163,7 @@ ${gameJs}
 ${css}
 </style>
 <div id="app"></div>
-<script>window.__COCKY__ = ${scriptSafe(bundle)};</script>
+<script>window.__ORD__ = ${scriptSafe(bundle)};</script>
 <script>${lottieLib}</script>
 <script>${peerLib}</script>
 <script>

@@ -50,7 +50,8 @@ export const RATING = Object.freeze({
   HISTORY_MAX: 20,
 });
 
-// Tiers are flavour, not mechanics — the number is the truth. Named for noses
+// Tiers are flavour, not mechanics — the number is the truth. Named for the
+// standing you build, not for the lying you did to get it.
 // because that is what the game is about (Gullnesen, PRD §5.3).
 const rtTIERS = [
   { min: 1600, nb: "Mestermøller", en: "Master liar" },
@@ -58,7 +59,7 @@ const rtTIERS = [
   { min: 1200, nb: "Rutinert", en: "Seasoned" },
   { min: 1000, nb: "Habil", en: "Capable" },
   { min: 800, nb: "Ærlig sjel", en: "Honest soul" },
-  { min: 0, nb: "Blank nese", en: "Blank nose" },
+  { min: 0, nb: "Ukjent", en: "Unknown" },
 ];
 export const ratingTier = (r, lang = "nb") =>
   (rtTIERS.find((x) => r >= x.min) ?? rtTIERS[rtTIERS.length - 1])[lang];
@@ -109,19 +110,19 @@ const rtClampDelta = (d) => Math.max(-RATING.MAX_DELTA, Math.min(RATING.MAX_DELT
 // is just another player's browser — so the clamp is re-applied on receipt.
 // This is the honest bar Specs/ONLINE-PLAY.md sets: make it not-embarrassingly-
 // easy, don't pretend a party game has server-grade anti-cheat.
-export function ratingApply(profile, delta, { nose = 0, won = false } = {}) {
+export function ratingApply(profile, delta, { backing = 0, won = false } = {}) {
   const d = rtClampDelta(Math.round(Number(delta) || 0));
   const rating = Math.max(RATING.FLOOR, (profile.rating ?? RATING.START) + d);
   const history = [
     ...(profile.history ?? []),
-    { d, r: rating, n: Math.max(0, Math.round(Number(nose) || 0)) },
+    { d, r: rating, n: Math.max(0, Math.round(Number(backing) || 0)) },
   ].slice(-RATING.HISTORY_MAX);
   return {
     ...profile,
     rating,
     games: (profile.games ?? 0) + 1,
     wins: (profile.wins ?? 0) + (won ? 1 : 0),
-    nose: (profile.nose ?? 0) + Math.max(0, Math.round(Number(nose) || 0)),
+    backing: (profile.backing ?? 0) + Math.max(0, Math.round(Number(backing) || 0)),
     best: Math.max(profile.best ?? RATING.START, rating),
     history,
   };
@@ -144,7 +145,7 @@ export function ratingFresh(name = "") {
     rating: RATING.START,
     games: 0,
     wins: 0,
-    nose: 0,
+    backing: 0,
     best: RATING.START,
     history: [],
     // Not a rating field, and it rides here on purpose: mute is the one setting
@@ -175,7 +176,18 @@ export function ratingLoad() {
     // Version switch, not a silent merge: a future v2 gets a real migration
     // here, and anything unrecognised is reseeded rather than half-read.
     if (p.v !== RATING.VERSION) return ratingFresh(typeof p.name === "string" ? p.name : "");
-    return { ...ratingFresh(p.name), ...p, v: RATING.VERSION };
+    const out = { ...ratingFresh(p.name), ...p, v: RATING.VERSION };
+    /* FIELD RENAME, SAME VERSION. The career counter was `nose` until the game
+       stopped being about noses; it is `backing` now, and the number means the
+       same thing — how many people have ever voted for something you wrote.
+       Without this line every existing player silently drops to zero on the next
+       load, since the spread above copies `nose` and leaves `backing` at its
+       fresh default. Not a VERSION bump, because nothing needs reseeding: one
+       key moved and the value is carried across unchanged. The old key is left
+       on the object deliberately — harmless, and it makes a mis-migration
+       recoverable rather than lost. */
+    if (out.backing === 0 && typeof p.nose === "number") out.backing = p.nose;
+    return out;
   } catch { return ratingFresh(); }
 }
 

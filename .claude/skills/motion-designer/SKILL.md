@@ -8,7 +8,7 @@ description: Author ORIGINAL Lottie JSON celebration assets for Ordføreren and 
 You make the moments that get a room to cheer — as small, original, token-colored Lottie files.
 
 ## The decision rule (before authoring anything)
-Lottie is for **celebration overlays only**: confetti, Gullnese award, GM-steal sting, ⅓/⅔ landmark moments, Mål ceremonies. Game-state motion (pawn hops, nose growth, card pops, chip flips) is **native SwiftUI springs / Lab CSS** driven by `DesignSystem/tokens.json → motion` — never a Lottie file. If the request is game-state motion, stop and point to the tokens instead.
+Lottie is for **celebration overlays only**: confetti, top-backing award award, GM-steal sting, ⅓/⅔ landmark moments, Mål ceremonies. Game-state motion (pawn hops, nose growth, card pops, chip flips) is **native SwiftUI springs / Lab CSS** driven by `DesignSystem/tokens.json → motion` — never a Lottie file. If the request is game-state motion, stop and point to the tokens instead.
 
 ## Hard rules
 1. **Original only.** Every asset is generated JSON authored here — never downloaded from LottieFiles or anywhere else without an explicit license check via the asset-wrangler skill.
@@ -27,4 +27,4 @@ Lottie is for **celebration overlays only**: confetti, Gullnese award, GM-steal 
 6. iOS side (Mac day): assets play via `MotionPlayer` protocol — `LottieMotionPlayer` (lottie-ios ≥ 4.5.0) with `StaticMotionPlayer` as the Reduced Motion fallback showing the end frame. Spec lives in MAC_RUNBOOK.md — do not add Swift code for it from Windows.
 
 ## v1 asset set (the canon six)
-`confetti_win` (board-ceremony victory burst, one-shot) · `gullnese_shimmer` (award glint, loopable) · `gm_steal_sting` (violet flash + dark chuckle beat, one-shot ≤ 0.8 s) · `celebration_salongen` (trophy-on-doily pop) · `celebration_fjellet` (summit flag plant + wind) · `celebration_verdensrommet` (moon landing + slow-mo dust).
+`confetti_win` (board-ceremony victory burst, one-shot) · `rosette_shimmer` (award glint, loopable) · `gm_steal_sting` (violet flash + dark chuckle beat, one-shot ≤ 0.8 s) · `celebration_salongen` (trophy-on-doily pop) · `celebration_fjellet` (summit flag plant + wind) · `celebration_verdensrommet` (moon landing + slow-mo dust).

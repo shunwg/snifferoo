@@ -105,9 +105,10 @@ const ownScreen = () => U.mode === "party" || online();
    FULL COLOUR — in a monochrome app they were the loudest pixels on the board,
    and they were reporting real values (who is GM, how many votes a lie caught).
    These are the same two shapes as the CSS masks in base.css, inlined where a
-   mask cannot reach (inside a text run). */
-const markRat = (h = 11) =>
-  `<svg viewBox="0 0 100 66" height="${h}" width="${(h * 1.5).toFixed(0)}" fill="currentColor" aria-hidden="true" style="vertical-align:-1px"><path d="M26 50c-10-4-14-16-6-24 10-10 30-14 46-10 12 3 21 10 30 19 2 2 2 5-1 6-10 5-21 8-33 9-14 1-27 1-36 0Z"/><circle cx="62" cy="20" r="12"/><path d="M27 51C16 58 5 56 4 48" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/></svg>`;
+   mask cannot reach (inside a text run). The rosette reports oppslutning: one
+   notch per delegate who backed your version. */
+const markRosette = (h = 11) =>
+  `<svg viewBox="0 0 100 100" height="${h}" width="${h}" fill="currentColor" aria-hidden="true" style="vertical-align:-1px"><path d="M40 60 L26 96 L37 91 L45 99 L53 63 Z M60 60 L74 96 L63 91 L55 99 L47 63 Z"/><path d="M50 12A7.25 7.25 0 0 1 64 15.8A7.25 7.25 0 0 1 74.2 26A7.25 7.25 0 0 1 78 40A7.25 7.25 0 0 1 74.2 54A7.25 7.25 0 0 1 64 64.2A7.25 7.25 0 0 1 50 68A7.25 7.25 0 0 1 36 64.2A7.25 7.25 0 0 1 25.8 54A7.25 7.25 0 0 1 22 40A7.25 7.25 0 0 1 25.8 26A7.25 7.25 0 0 1 36 15.8A7.25 7.25 0 0 1 50 12Z M50 29.5a10.5 10.5 0 1 0 0 21 10.5 10.5 0 0 0 0-21Z"/></svg>`;
 const markCrown = (h = 11) =>
   `<svg viewBox="0 0 24 18" height="${h}" width="${(h * 1.33).toFixed(0)}" fill="currentColor" aria-hidden="true" style="vertical-align:-1px"><path d="M2 15.5 0.6 4.2c-.1-.9 1-1.5 1.7-.9L7 7 10.9.9c.5-.8 1.7-.8 2.2 0L17 7l4.7-3.7c.7-.6 1.8 0 1.7.9L22 15.5a1 1 0 0 1-1 .9H3a1 1 0 0 1-1-.9Z"/></svg>`;
 
@@ -123,40 +124,38 @@ const app = document.getElementById("app");
 // face at 34–68 px (bevelled token · flat brows · dot eyes · smirk · capsule
 // Nose) — change one, change both. The hard offset shadow is drawn in-SVG rather
 // than via a CSS filter so the mark carries it everywhere it appears.
-/* The mark: a mouse in profile — one body, one ear, one tail.
+/* The mark: a ROSETTE — the campaign badge you pin on when the room backs you.
 
-   IT WAS A DUCK, TWICE. First as a head with a long horizontal snout and two
-   circles merged into the outline: that is a bill and no ears. Then as a rat
-   assembled from three overlapping shapes, which looked right at 60 px and fell
-   apart at 84 px — the ear only overlapped the back by a unit, so it detached,
-   and the seams between shapes read as lumps. Small-size antialiasing had been
-   hiding the joins.
+   IT REPLACED A RAT, which replaced a monk. The rat was retired because "a rat"
+   is a snitch in both languages, and this game rewards persuasion rather than
+   detection: you win by reading the room, not by sniffing out a liar.
 
-   So the body and head are now ONE smooth path. Nothing to come apart.
+   TWELVE SEMICIRCULAR BULGES ON A BASE CIRCLE, generated rather than hand-drawn,
+   so the pleats are exactly even — an uneven scallop reads as a wobble at large
+   sizes and as dirt at small ones. Three versions were rendered at 84/40/22 px on
+   both the light page and the dark card before this one was chosen: a solid
+   centre reads as a cloud, a plain disc with a ring reads as a bullseye, and only
+   the knocked-out centre still says "rosette" at badge size.
 
-   THE EAR OVERLAPS THE BACK BY HALF ITS RADIUS. Anything less separates at
-   large sizes, and a floating circle above a blob is a balloon.
+   THE TAILS ARE THE IDENTITY, the same job the rat's tail did. A circle alone is
+   nothing; a circle with two ribbons is unmistakable. Three tail treatments were
+   compared: short ones disappear under the disc at 22 px and thin ones go
+   spindly, so these are wide, and they carry a swallowtail notch that survives
+   down to badge size.
 
-   THE TAIL IS A STROKE, AND IT ENDS FREE. A stroke tapers and curves where a
-   filled outline needs both edges drawn and looks clumsy this small. Ending
-   free matters more: three earlier tails curved back toward the body, and a
-   closed loop on the side of a rounded mass is a mug handle. Four tails were
-   rendered at 22/40/80 px before this one — the difference is only visible
-   side by side, which is why they were.
-
-   currentColor throughout, so one drawing serves light-on-dark and
-   dark-on-light. The eye is a masked hole, correct on any background.
-
-   No extrusion. It survived from the previous mark and wrecked this one: a
-   whole animal has gaps between tail, haunch and snout, and offset copies fill
-   them in. At badge size it was a blob with a circle on it. */
+   THE CENTRE IS A KNOCKED-OUT HOLE, not a second shape in the background colour,
+   so one drawing is correct on any plane — the same lesson the previous mark's
+   masked eye taught. currentColor throughout, and no extrusion: the last mark was
+   wrecked by offset copies filling the gaps between its own limbs. A rosette has
+   no limbs, but the rule stands. */
 const LOGO = (sz = 26) => {
-  const art = '<path d="M26 50c-10-4-14-16-6-24 10-10 30-14 46-10 12 3 21 10 30 19 2 2 2 5-1 6-10 5-21 8-33 9-14 1-27 1-36 0Z"/><circle cx="62" cy="20" r="12"/><path d="M27 51C16 58 5 56 4 48" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/>';
-  return '<svg class="logo" width="' + (sz * 1.5).toFixed(1) + '" height="' + sz + '" viewBox="0 0 100 66"'
-    + ' fill="currentColor" role="img" aria-hidden="true">'
-    + '<defs><mask id="snEye"><rect width="100" height="66" fill="#fff"/>'
-    + '<circle cx="77" cy="36" r="3.8" fill="#000"/></mask></defs>'
-    + '<g mask="url(#snEye)">' + art + '</g></svg>';
+  const tails = '<path d="M40 60 L26 96 L37 91 L45 99 L53 63 Z M60 60 L74 96 L63 91 L55 99 L47 63 Z"/>';
+  const disc = '<path d="M50 12A7.25 7.25 0 0 1 64 15.8A7.25 7.25 0 0 1 74.2 26A7.25 7.25 0 0 1 78 40'
+    + 'A7.25 7.25 0 0 1 74.2 54A7.25 7.25 0 0 1 64 64.2A7.25 7.25 0 0 1 50 68A7.25 7.25 0 0 1 36 64.2'
+    + 'A7.25 7.25 0 0 1 25.8 54A7.25 7.25 0 0 1 22 40A7.25 7.25 0 0 1 25.8 26A7.25 7.25 0 0 1 36 15.8'
+    + 'A7.25 7.25 0 0 1 50 12Z M50 29.5a10.5 10.5 0 1 0 0 21 10.5 10.5 0 0 0 0-21Z"/>';
+  return '<svg class="logo" width="' + sz + '" height="' + sz + '" viewBox="0 0 100 100"'
+    + ' fill="currentColor" role="img" aria-hidden="true">' + tails + disc + '</svg>';
 };
 
 // Every avatar in the app, from the 34 px author chip to the 68 px mascot. Six
@@ -164,16 +163,15 @@ const LOGO = (sz = 26) => {
 // had already drifted (no mouth at all) — so the geometry now lives in exactly
 // one place: components.css scales all of it off --fs. `notch` is the vote count
 // the Nose is bragging about; the width formula is CSS's, not ours.
-const face = ({ color, size = 34, mood = "", notch = 0, tone = "", grow = false, bob = false, brand = false }) =>
-  `<span class="face ${mood}${bob ? " bob" : ""}" style="--fs:${size}px;--notch:${notch};--pc:${color};background:${color}">
-     <i class="ears"></i><i class="brows"></i><i class="smile"></i>
-     <i class="nose ${tone}${brand ? " brand" : ""}${grow ? " grow" : ""}"></i>
+const badge = ({ color, size = 34, notch = 0, tone = "", grow = false, bob = false }) =>
+  `<span class="badge ${tone === "gold" ? "top " : ""}${bob ? "bob" : ""}" style="--fs:${size}px;--notch:${notch};--pc:${color}">
+     <i class="sash ${tone === "gm" ? "gm" : ""}${grow ? " grow" : ""}"></i><i class="rose"></i>
    </span>`;
 
 /* ---------- content loading (inlined bundle → http real decks → embedded mini) ---------- */
 async function loadContent(lang) {
-  // Standalone single-file build inlines the full decks on window.__COCKY__.
-  const bundle = window.__COCKY__;
+  // Standalone single-file build inlines the full decks on window.__ORD__.
+  const bundle = window.__ORD__;
   if (bundle?.decks?.[lang]) {
     CONTENT.deck = bundle.decks[lang];
     CONTENT.fakes = bundle.fakes?.[lang] ?? MINI_FAKES[lang];
@@ -629,8 +627,8 @@ SCREENS.RULES = () => {
        <span class="step-n">${n}</span>
        <span class="step-b"><b>${t("rulesStep" + n + "t")}</b><small>${t("rulesStep" + n + "b")}</small></span>
      </div>`).join("")}
-   <div class="nose-demo" aria-hidden="true">
-     ${[1, 2, 3].map((n) => face({ color: "var(--color-player-2)", notch: n })).join("")}
+   <div class="badge-demo" aria-hidden="true">
+     ${[1, 2, 3].map((n) => badge({ color: "var(--color-player-2)", notch: n })).join("")}
    </div>
    <p class="small" style="text-align:center;margin-top:0">${t("rulesBacking")}</p>
    <div class="card">
@@ -886,7 +884,7 @@ function netSeatLate(msg) {
 
   if (kind === "pending") {
     if (!G.pendingSeats.some((s) => s.pid === msg.pid)) {   // a re-hello must not double-book
-      G.pendingSeats.push({ pid: msg.pid, name, rating: msg.rating, games: msg.games, nose: msg.nose });
+      G.pendingSeats.push({ pid: msg.pid, name, rating: msg.rating, games: msg.games, backing: msg.backing });
     }
     G.lateJoin = { note: t("lateWaiting", esc(name)), seat: -1, pid: msg.pid };
     play("tickIn");
@@ -986,7 +984,7 @@ SCREENS.GM_INTRO = () => {
      <h1 style="color:var(--color-text-on-bg)">${ownScreen() && userIsGm() ? t("youAreGm") : t("gmIs", esc(gm.name))}</h1>
      <p class="sub">${t("tagline")}</p>
      <div style="display:flex;justify-content:center;margin:16px 0;">
-       ${face({ color: gm.color, size: 68, tone: "gm", brand: true, bob: true })}</div>
+       ${badge({ color: gm.color, size: 68, tone: "gm", bob: true })}</div>
    </div>
    ${ownScreen() && !userIsGm()
     ? `<p class="small" style="text-align:center">…</p>`
@@ -1212,7 +1210,7 @@ SCREENS.WAIT = () => {
      <p class="small" style="margin:8px 0 0">${t("shuffling")}</p>
    </div>
    <div style="flex:1;display:flex;align-items:center;justify-content:center;">
-     ${face({ color: myColor(), size: 60, mood: watching ? "neutral" : "suspicious", brand: true, bob: true })}
+     ${badge({ color: myColor(), size: 60, bob: true })}
    </div>`);
 };
 
@@ -1345,11 +1343,13 @@ SCREENS.REVEAL = () => {
          ${!isT ? `<div class="author">
             ${o.authors.map((a) => {
               const pl = G.players[a]; const gmA = a === G.gm;
-              // .face.smug was written for exactly this and never used: the GM who
-              // just took the round finally smirks about it. Only once the truth is
-              // out — before that nobody knows they stole anything.
-              const mood = gmA && done && G.gmStole ? "smug" : "";
-              return `${face({ color: pl.color, notch: voters.length, grow: true, mood, tone: gmA ? "gm" : "" })}
+              // A `smug` mood used to fire here — the GM who just took the round
+              // finally smirking about it, once the truth was out. It went with the
+              // face: a rosette has no expression to wear. Nothing is lost, because
+              // the steal is already announced in words on this same screen
+              // (t("gmSteal")) — the more legible of the two channels, and the one
+              // that survives greyscale and a 34 px chip.
+              return `${badge({ color: pl.color, notch: voters.length, grow: true, tone: gmA ? "gm" : "" })}
                       <span>${t("by")} ${a === mySeat() && ownScreen() ? t("you") : esc(pl.name)}${gmA ? ` · <span style="color:var(--color-text-secondary-on-surface)">${t("gmDecoy")}</span>` : ""}</span>`;
             }).join("")}
           </div>` : ""}
@@ -1442,7 +1442,7 @@ SCREENS.BOARD = () => {
    <div style="margin-top:10px">
      ${G.players.map((p, i) => `<div class="scoreline">
         <span><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${p.color}"></span>
-        ${esc(p.name)} ${i === G.gm ? markCrown(11) : ""} <span class="small">${markRat(10)} ${p.backing}</span>
+        ${esc(p.name)} ${i === G.gm ? markCrown(11) : ""} <span class="small">${markRosette(10)} ${p.backing}</span>
         ${G.deltas?.[i] ? `<b>+${G.deltas[i]}</b>` : ""}</span>
         <span id="sc${i}">${p.score} ${t("pts")}</span></div>`).join("")}
    </div>
@@ -1672,13 +1672,13 @@ SCREENS.WINNER = () => {
   const liar = [...G.players].sort((a, b) => b.backing - a.backing)[0];
   shell(`
    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;">
-     <div style="display:flex;justify-content:center;margin-bottom:4px">${markRat(38)}</div>
+     <div style="display:flex;justify-content:center;margin-bottom:4px">${markRosette(38)}</div>
      <h1>${G.shared ? t("shared") : t("winner", esc(winners[0]?.name ?? ""))}</h1>
      <p class="sub">${t("restOfYou")}</p>
-     <div class="card gullnese-card" style="position:relative;display:flex;gap:12px;align-items:center;justify-content:center;">
-       ${face({ color: liar.color, size: 48, mood: "delighted", notch: liar.backing, grow: true, tone: "gold" })}
-       <b>${t("topBacking", esc(liar.name))} (${markRat(12)} ${liar.backing})</b>
-       <span class="gullnese-fx" id="gullnesefx"></span></div>
+     <div class="card backing-card" style="position:relative;display:flex;gap:12px;align-items:center;justify-content:center;">
+       ${badge({ color: liar.color, size: 48, notch: liar.backing, grow: true, tone: "gold" })}
+       <b>${t("topBacking", esc(liar.name))} (${markRosette(12)} ${liar.backing})</b>
+       <span class="backing-fx" id="backingfx"></span></div>
      <div style="margin-top:14px">${[...G.players].sort((a, b) => b.score - a.score).map((p) => `
         <div class="scoreline"><span>${dot(p.color, p.name)} ${esc(p.name)}</span><span>${p.score} ${t("pts")}</span></div>`).join("")}</div>
      ${G.ratingMine === undefined ? "" : `<p class="small" style="margin-top:10px">${t("ratingDelta", G.ratingMine)} → ${PROFILE.rating} · ${esc(ratingTier(PROFILE.rating, U.lang))}</p>`}
@@ -1692,7 +1692,7 @@ SCREENS.WINNER = () => {
     play("win");                                   // triumphant fanfare
     if (window.lottie && !reduceMotion()) {
       playCelebration("confetti_win");
-      mountLottie(document.getElementById("gullnesefx"), "gullnese_shimmer");
+      mountLottie(document.getElementById("backingfx"), "rosette_shimmer");
     } else if (!reduceMotion()) {
       confetti();   // CSS fallback when lottie-web is unavailable
     }
@@ -2046,7 +2046,7 @@ SCREENS.LOBBY_WAIT = () => {
      <p class="small" style="margin:8px 0 0">${t("lobbyWaitingSub")}</p>
    </div>
    <div style="flex:1;display:flex;align-items:center;justify-content:center;">
-     ${face({ color: AVA[0], size: 60, brand: true, bob: true })}
+     ${badge({ color: AVA[0], size: 60, bob: true })}
    </div>`);
 };
 
@@ -2303,7 +2303,7 @@ function netApplyRatings(msg) {
   G.ratingMine = mine;
   const seat = mySeat();
   PROFILE = ratingApply(PROFILE, mine, {
-    nose: Math.min(G.players[seat]?.backing ?? 0, ratingBackingCap(G.players.length, G.round)),
+    backing: Math.min(G.players[seat]?.backing ?? 0, ratingBackingCap(G.players.length, G.round)),
     won: (G.winnersIdx ?? []).includes(seat),
   });
   ratingSave(PROFILE);
@@ -2336,7 +2336,7 @@ function settleRating() {
   G.ratingMine = mine;                 // shown on the winner screen
   const seat = mySeat();
   PROFILE = ratingApply(PROFILE, mine, {
-    nose: Math.min(G.players[seat]?.backing ?? 0, ratingBackingCap(G.players.length, G.round)),
+    backing: Math.min(G.players[seat]?.backing ?? 0, ratingBackingCap(G.players.length, G.round)),
     won: (G.winnersIdx ?? []).includes(seat),
   });
   ratingSave(PROFILE);

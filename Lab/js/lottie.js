@@ -1,6 +1,6 @@
 // lottie.js — celebration overlay player. Lane B owns this file.
 // Plays the ORIGINAL Lottie assets (Resources/Lottie/, authored by motion-designer)
-// for celebration MOMENTS only: confetti, Gullnese shimmer, GM-steal sting, board
+// for celebration MOMENTS only: confetti, top-backing award shimmer, GM-steal sting, board
 // landmarks. Core game motion stays native (CSS springs here / SwiftUI springs in
 // the app). Mirrors the future MotionPlayer protocol.
 //
@@ -9,7 +9,7 @@
 // game degrades gracefully to the CSS confetti fallback in ui.js.
 
 const CACHE = {};
-const CANON = ["confetti_win", "gullnese_shimmer", "gm_steal_sting",
+const CANON = ["confetti_win", "rosette_shimmer", "gm_steal_sting",
                "celebration_salongen", "celebration_fjellet", "celebration_verdensrommet"];
 
 export const reduceMotion = () =>
@@ -17,11 +17,11 @@ export const reduceMotion = () =>
 
 const lib = () => window.lottie || null;
 
-// Load one asset: inlined standalone bundle first (window.__COCKY__.lottie),
+// Load one asset: inlined standalone bundle first (window.__ORD__.lottie),
 // then http fetch (served Lab). Returns null if neither is available.
 async function load(name) {
   if (CACHE[name]) return CACHE[name];
-  const inlined = window.__COCKY__?.lottie?.[name];
+  const inlined = window.__ORD__?.lottie?.[name];
   if (inlined) return (CACHE[name] = inlined);
   try {
     const res = await fetch(`/Resources/Lottie/${name}.json`);
@@ -50,7 +50,7 @@ export async function playCelebration(name, { loop = false, fit = "slice" } = {}
   return cleanup;
 }
 
-// Mount a (looping) asset inside a specific element — e.g. the Gullnese badge.
+// Mount a (looping) asset inside a specific element — e.g. the top-backing award badge.
 export async function mountLottie(el, name, { loop = true, fit = "meet" } = {}) {
   if (!lib() || reduceMotion() || !el) return;
   const data = await load(name);

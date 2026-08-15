@@ -3,14 +3,25 @@
 
 
 /* ---------- drawn marks ----------
-   Two shapes the interface needs as ICONS rather than as illustrations: the rat
-   (the leader's marker) and the cheese wedge (the goal). Kept as CSS masks so
-   they inherit currentColor and cost nothing at any size — and so there is
-   exactly ONE copy of each, rather than an emoji at every call site.
-   Data URIs, not files, so the single-file bundle stays single-file. */
+   Two shapes the interface needs as ICONS rather than as illustrations: the
+   ROSETTE (the leader's marker — whoever holds the most oppslutning) and the
+   GAVEL (the goal, and the ordstyrer's tool). Kept as CSS masks so they inherit
+   currentColor and cost nothing at any size, and so there is exactly ONE copy of
+   each rather than an emoji at every call site. Data URIs, not files, so the
+   single-file bundle stays single-file.
+
+   THE ROSETTE IS TWELVE SEMICIRCULAR BULGES ON A BASE CIRCLE, generated rather
+   than drawn by hand, plus two ribbon tails and a knocked-out centre. Chosen over
+   a solid-centre and a plain-disc version by rendering all three at 84/40/22 px
+   on both planes: the solid one reads as a cloud, the plain disc as a bullseye,
+   and only this one still says "rosette" at badge size. The scallops degrade
+   gracefully — at 22 px they smooth into a circle and the tails carry the
+   identity, which is the same job the rat's tail used to do. That graceful
+   degradation is the point: the two marks before this each passed at one size
+   and fell apart at another. */
 :root {
-  --mark-rat: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 66"><path fill="black" d="M26 50c-10-4-14-16-6-24 10-10 30-14 46-10 12 3 21 10 30 19 2 2 2 5-1 6-10 5-21 8-33 9-14 1-27 1-36 0Z"/><circle fill="black" cx="62" cy="20" r="12"/><path d="M27 51C16 58 5 56 4 48" fill="none" stroke="black" stroke-width="5.5" stroke-linecap="round"/></svg>');
-  --mark-cheese: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 40"><path fill="black" d="M4 30V16.5c0-1 .7-1.9 1.7-2.1L41.4 6.1c1.6-.4 3.1.9 3.1 2.5V30a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Zm9.5-9.2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm18 3.2a2.4 2.4 0 1 0 0 4.8 2.4 2.4 0 0 0 0-4.8ZM24 13.6a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z"/></svg>');
+  --mark-rosette: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="black" d="M40 60 L26 96 L37 91 L45 99 L53 63 Z M60 60 L74 96 L63 91 L55 99 L47 63 Z"/><path fill="black" d="M50 12A7.25 7.25 0 0 1 64 15.8A7.25 7.25 0 0 1 74.2 26A7.25 7.25 0 0 1 78 40A7.25 7.25 0 0 1 74.2 54A7.25 7.25 0 0 1 64 64.2A7.25 7.25 0 0 1 50 68A7.25 7.25 0 0 1 36 64.2A7.25 7.25 0 0 1 25.8 54A7.25 7.25 0 0 1 22 40A7.25 7.25 0 0 1 25.8 26A7.25 7.25 0 0 1 36 15.8A7.25 7.25 0 0 1 50 12Z M50 29.5a10.5 10.5 0 1 0 0 21 10.5 10.5 0 0 0 0-21Z"/></svg>');
+  --mark-gavel: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="black" d="M55.6 12.1 87.9 44.4a5 5 0 0 1 0 7.1l-7.1 7.1a5 5 0 0 1-7.1 0L41.4 26.3a5 5 0 0 1 0-7.1l7.1-7.1a5 5 0 0 1 7.1 0Z"/><path fill="black" d="M38.9 38.9 61.1 61.1a4 4 0 0 1 0 5.7l-1.4 1.4a4 4 0 0 1-5.7 0L31.8 46a4 4 0 0 1 0-5.7l1.4-1.4a4 4 0 0 1 5.7 0Z"/><rect fill="black" x="14" y="82" width="60" height="10" rx="5"/></svg>');
 }
 
 
