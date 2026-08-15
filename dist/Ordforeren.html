@@ -488,7 +488,7 @@ html, body { overscroll-behavior-y: contain; }
   color: var(--color-text-secondary); font-size: 14px; font-weight: 700;
 }
 
-/* Career rating badge (PRD §2.1) — quiet by design; the Nose and the Board
+/* Career rating badge (PRD §2.1) — quiet by design; the sash and the Board
    own the drama (DESIGN.md §5 boldness budget). */
 .ratingpill {
   display: inline-block; margin-left: 6px; padding: 2px 10px; border-radius: 999px;
@@ -911,11 +911,14 @@ html, body { overscroll-behavior-y: contain; }
   border-radius: 999px; padding: 0 3px; line-height: 1.25;
 }
 
-/* Mål — a gold medallion that pulses "claim me" (all themes inherit; DESIGN §5) */
-/* Mål. The destination is where DESIGN-DIRECTION.md §4 allows cheese — a
-   goal, a milestone, an end-of-game payoff — and nowhere near a button or a
-   background. It is a small drawn wedge behind the number, never instead of it:
-   §4 requires the numeral to stay visible alongside any cheese. */
+/* Mål — the seat you are running for. Pulses "claim me" (all themes inherit;
+   DESIGN §5). The mark behind the number is the GAVEL, the ordstyrer's tool and
+   the office itself. This tile is the only place in the app it appears, so it
+   reads as a destination rather than as decoration.
+
+   BEHIND the numeral at 16% opacity, never instead of it: the number is the
+   information and the mark is flavour, and flavour that hides a number is a bug.
+   (It was a cheese wedge while the game had a rat in it — same rule, new object.) */
 .board .space.goal {
   background: var(--color-board-goal); color: var(--color-text-on-surface);
   border: 0; border-radius: 5px; box-shadow: 0 0 0 3px var(--color-bg);

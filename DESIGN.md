@@ -123,24 +123,53 @@ One `BoardLayout` (a winding serpentine of *target* spaces, Start → Mål) rend
 
 Rules: identical space geometry and pawn physics; only layers, sprites, particles, and sounds differ. A theme is one config struct + assets — a 4th theme must be a one-file job.
 
-## 4. Signature 1: **Nesen** — the mark and the mechanic
-**The logo**: a round paper face, two dot eyes, a sly smirk, and a long ink-outlined nose reaching right. This IS the app icon (face on `action`), the top-bar brand, the loader, and every empty state.
+## 4. Signature 1: **Oppslutningen** — the mark and the mechanic
+*(Rewritten 2026-08-16. This section described a bevelled cream monk's face with a
+pink capsule nose, pinned to the unit. It had already been overtaken twice — by
+the monochrome inversion and by the rat — and carried a "pending redraw" note
+promising a snout that never arrived. A spec that documents a drawing nobody
+ships is worse than no spec: it is a spec people trust.)*
 
-> **Pending redraw.** DESIGN-DIRECTION.md §3 makes the rat a *player token*, not a character: small, stylised, a silhouette rather than a face. The Nose survives that change and is arguably better served by it — a lengthening **snout on a silhouette** carries the `--notch` scale more clearly than a nose bolted to a face does. The mark below is the current drawing, not the target.
+**The logo**: a **rosette** — twelve semicircular bulges generated on a base
+circle, two ribbon tails, a knocked-out centre. The campaign badge you pin on when
+the room backs you. This IS the app icon, the top-bar brand, the loader and every
+empty state.
 
-**In play:** the nose grows one springy notch per vote a lie collected (rising "boing" pitch per notch). GM decoys grow a **`private`-coloured** nose — the room learns to fear it. The game's best liar takes the **Gullnese** badge on the winner screen, separate from winning on points, so there are two things to brag about. Reduced Motion: crossfade to final length.
+**In play:** the rosette wears a **sash that lengthens one notch per vote your
+version collected** (rising pitch per notch). The ordstyrer's decoys wear a
+`private`-toned sash — the room learns to read it. Whoever ends with the most
+oppslutning takes that badge on the winner screen, separate from winning on
+points, so there are two things to brag about. Reduced Motion: crossfade to final
+length.
 
-**Mark geometry** *(amended 2026-07-27 — was unspecified, which let the drawing drift)*. One drawing serves the logo and every avatar, so it is pinned here rather than left to each implementation:
+**Mark geometry.** One drawing serves the logo, the app icon and every avatar, so
+it is pinned here rather than left to each implementation:
 
 | | |
 |---|---|
-| Head | Bevelled cream disc — outer `#E8D5AE` ring, inner `sheet` face, `2.8`-unit `ink` outline on a 32-unit head. Hard offset shadow, no blur. |
-| Eyes | Two dots at 35% height, 26% in from each side. |
-| Brows | Flat, short, high (20% height, 18% wide, ±8°). Long or steep reads as angry, not sly. |
-| Smirk | A single tilted arc (−9°), lower-left of centre. Never a symmetric smile, and never an upward hook — it tangles with the nose's cap. |
-| Nose | A **full capsule lying across** the face at 43% height, `alert`, ink-outlined, jutting ~50% of a head-width past the rim. Not a half-capsule bolted to the edge: that reads as a spout. |
+| Disc | Twelve semicircular bulges on a base circle of r=28 at (50,40) in a 100-unit box. **Generated, not hand-drawn** — uneven pleats read as a wobble large and as dirt small. |
+| Centre | A knocked-out hole, r=10.5. A hole, never a second shape filled with the background colour: the mark must be correct on the light page and the dark card from one drawing. |
+| Tails | Two ribbons from the disc's underside to y≈97, with a swallowtail notch. **These are the identity** — a circle alone is nothing. Wide, not thin: thin goes spindly and short vanishes under the disc at 22 px. |
+| Sash | Behind the rosette, extending right, `0.16 + 0.30 × notch` of the box width. |
 
-**Data vs decoration.** The same drawing has two jobs and they must stay visibly separate. A nose marked *decorative* (logo, mascots, app icon) is a fixed length. A nose that **reports a vote count** is `0.5 + 0.33 × notch` head-widths and must be exact — a decorative nose on a reporting face would be a lie about the score. Every feature dimension is a ratio of one size property so proportions hold from 34 px to 512 px, and the ink outline is an inset ring rather than a border (a border shrinks the padding box and silently drifts every child percentage). The app icon is `Lab/icon.svg`, rastered by `node Tools/make-icons.mjs`.
+**Data vs decoration.** The same drawing has two jobs and they must stay visibly
+separate. A sash marked *decorative* (logo, app icon, empty states) has no notch
+at all. A sash that **reports a vote count** is exact — a decorative one on a
+reporting badge would be a lie about the score. Every dimension is a ratio of one
+size property so proportions hold from 22 px to 512 px.
+
+**Contrast, learned the hard way.** The badge lives almost entirely on the dark
+card plane. `--color-accent-truth` is `#000000`: 21:1 on the light page and
+**1.15:1** on a card, where it disappears entirely. The eight player greys measure
+about 2:1 there as a masked silhouette. So the badge is **ink**, and identity is
+carried by the `dot()` beside it, which is a coloured disc with the player's
+initial in it (§9, never colour alone). Measure any new mark against the plane it
+actually sits on, not the one the token was designed for.
+
+The app icon is `Lab/icon.svg`, rastered by `node Tools/make-icons.mjs`. **It has
+been stale twice** — it was still the monk face two redesigns after the monk was
+gone, because no gate renders an icon. If the mark changes, that file changes in
+the same commit.
 
 ## 5. Signature 2: the Board ceremony
 - Pawns hop **one space at a time** (interpolatingSpring ~0.35 s/hop, `.soft` haptic + theme hop-sound per space). Multiple earners animate in submission order, never simultaneously — the room watches each fortune change.

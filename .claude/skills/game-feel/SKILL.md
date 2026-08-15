@@ -8,7 +8,7 @@ description: The house discipline for how Ordføreren feels to touch — game-st
 Derived from *Game Feel: A Game Designer's Guide to Virtual Sensation*, Steve Swink (Morgan Kaufmann, 2009), chapter 1 — plus what a 2026 audit of this repo and of Edvard's Ordkrig actually found. Swink's framework is paraphrased here; read the book for the argument.
 
 **What this skill owns:** game-state motion (pawn hops, nose growth, card pops, chip flips, screen entrances), input response, haptics, the pairing of sound to event, and pacing.
-**What it does not own:** Lottie celebration overlays — confetti, Gullnese, GM-steal sting, Mål landmarks. That is `motion-designer`, and it says so itself. If the request is a celebration asset, stop and go there.
+**What it does not own:** Lottie celebration overlays — confetti, the top-backing shimmer, GM-steal sting, Mål landmarks. That is `motion-designer`, and it says so itself. If the request is a celebration asset, stop and go there.
 
 ---
 
@@ -109,6 +109,6 @@ Before calling a beat done, ask in this order:
 ## Reading
 
 - Swink, *Game Feel* (2009), ch. 1 — the three building blocks, the seven regions, and the five experiences of game feel. Local extract: `2-game-feel.pdf` (front matter + ch. 1; `pdftotext -layout` works on this box, `pdftoppm` is not installed).
-- `DESIGN.md` §7 — the motion and sound grammar, per moment. §4 the Nose, §5 the Board ceremony, §9 the accessibility floor.
+- `DESIGN.md` §7 — the motion and sound grammar, per moment. §4 the rosette and the sash, §5 the Board ceremony, §9 the accessibility floor.
 - `PRD.md` §10 immersion bar and haptic levels; §11 the four room-level success criteria.
 - `DesignSystem/tokens.json` → `motion` — 28 durations, 12 springs, each with a note naming its moment and its haptic. This is the vocabulary; use it.

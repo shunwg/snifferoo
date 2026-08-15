@@ -36,7 +36,7 @@
   color: var(--color-text-secondary); font-size: 14px; font-weight: 700;
 }
 
-/* Career rating badge (PRD §2.1) — quiet by design; the Nose and the Board
+/* Career rating badge (PRD §2.1) — quiet by design; the sash and the Board
    own the drama (DESIGN.md §5 boldness budget). */
 .ratingpill {
   display: inline-block; margin-left: 6px; padding: 2px 10px; border-radius: 999px;
